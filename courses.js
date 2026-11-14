@@ -1,4 +1,4 @@
-// The four courses. Order here = order on the chooser.
+// The five courses. Order here = order on the chooser.
 window.COURSES = {
  "interview": {
   "key": "hired-interview-v1",
@@ -281,6 +281,66 @@ window.COURSES = {
     "desc": "Explaining tech, demos, interviews, trade-offs"
    }
   ]
+ },
+ "itstudent": {
+  "key": "corner-office-itstudent-v1",
+  "unit": "Stage",
+  "name": "IT Student English",
+  "mark": "&lt;/&gt;",
+  "level": "A2 → B1 · 6 stages",
+  "eyebrow": "IT student English · based on Breaking Through, Part 1",
+  "h1": "Hello, <em>World!</em>",
+  "lead": "The IT side of the Breaking Through book: university and digital jobs, your digital day, tech news, skills and trends, and your first internship interview.",
+  "special": {
+   "kind": "fix",
+   "title": "Fix the mistake",
+   "sub": "Spot the typical error and pick the correct sentence",
+   "icon": "<path d=\"M5 12l4 4 10-10\"/><path d=\"M5 5h6M5 19h14\"/>"
+  },
+  "floors": [
+   {
+    "n": 1,
+    "name": "Hello, World!",
+    "short": "Hello, World",
+    "cefr": "A2",
+    "desc": "University life, digital jobs, to be, questions"
+   },
+   {
+    "n": 2,
+    "name": "My Digital Life",
+    "short": "Digital life",
+    "cefr": "A2",
+    "desc": "Devices, online actions, routines, how often"
+   },
+   {
+    "n": 3,
+    "name": "Right Now",
+    "short": "Right now",
+    "cefr": "A2+",
+    "desc": "Present continuous vs simple, chats, tech problems"
+   },
+   {
+    "n": 4,
+    "name": "Tech in the News",
+    "short": "Tech news",
+    "cefr": "A2–B1",
+    "desc": "Past simple, tech headlines, opinions"
+   },
+   {
+    "n": 5,
+    "name": "Skills & Trends",
+    "short": "Skills & trends",
+    "cefr": "B1",
+    "desc": "Personality, good at + -ing, AI, data, privacy"
+   },
+   {
+    "n": 6,
+    "name": "The Internship Interview",
+    "short": "Interview",
+    "cefr": "B1",
+    "desc": "can/could, polite questions, will vs going to"
+   }
+  ]
  }
 };
-window.BANKS = { interview: [], business: [], journalism: [], tech: [] };
+window.BANKS = { interview: [], business: [], journalism: [], tech: [], itstudent: [] };

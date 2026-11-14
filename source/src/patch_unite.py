@@ -111,6 +111,41 @@ sub('(cur.t === "q" || cur.t === "u" || cur.t === "h") ? "✕ Not quite — here
 sub('<span class="full${"quh".includes(cur.t) ? " answer" : ""}">${"quh".includes(cur.t) ? esc(cur.a) : full}</span>',
     '<span class="full${"quhp".includes(cur.t) ? " answer" : ""}">${"quhp".includes(cur.t) ? esc(cur.a) : full}</span>')
 assert 'buildType({ headline: "h", prompt: "p" }' in s
+# Fix the mistake (type e) for the IT Student course
+sub('it.t === "p" ? "Prompt lab · choose the best prompt" :', 'it.t === "p" ? "Prompt lab · choose the best prompt" : it.t === "e" ? "Fix the mistake · choose the correct sentence" :')
+sub(': it.t === "p" ? `<span class="story"><b>Your goal</b>${esc(it.s)}</span>Which prompt gets the best result?`',
+    ': it.t === "p" ? `<span class="story"><b>Your goal</b>${esc(it.s)}</span>Which prompt gets the best result?`\n        : it.t === "e" ? `<span class="direct"><b>Find the mistake</b><s>${esc(it.s)}</s></span>Which sentence is correct?`')
+sub('"quhp".includes(cur.t) ? "✕ Not quite — here is the strongest " + ({ h: "headline", p: "prompt" }[cur.t] || "answer")',
+    '"quhpe".includes(cur.t) ? "✕ Not quite — here is the " + ({ h: "strongest headline", p: "strongest prompt", e: "correct sentence" }[cur.t] || "strongest answer")')
+sub('<span class="full${"quhp".includes(cur.t) ? " answer" : ""}">${"quhp".includes(cur.t) ? esc(cur.a) : full}</span>',
+    '<span class="full${"quhpe".includes(cur.t) ? " answer" : ""}">${"quhpe".includes(cur.t) ? esc(cur.a) : full}</span>')
+s = s.replace('buildType({ headline: "h", prompt: "p" }[C.special.kind] || "u")', 'buildType({ headline: "h", prompt: "p", fix: "e" }[C.special.kind] || "u")')
+# word-order toggle: S.order "on"/"off"; when off, sessions never use the word-order activity
+sub('const k = ["gap", "ru"]; if (words(it).length >= 4 && words(it).length <= 14) k.push("order"); return k;',
+    'const k = ["gap", "ru"]; if (S.order !== "off" && words(it).length >= 4 && words(it).length <= 14) k.push("order"); return k;')
+sub('S = Object.assign({ prog: {}, mode: "choose", len: 10, ru: "on", act: "mix", days: [] }, load());',
+    'S = Object.assign({ prog: {}, mode: "choose", len: 10, ru: "on", act: "mix", order: "on", days: [] }, load());')
+s = s.replace('[["#set-act", "act"], ["#set-mode", "mode"], ["#set-len", "len"], ["#set-ru", "ru"]]',
+              '[["#set-act", "act"], ["#set-order", "order"], ["#set-mode", "mode"], ["#set-len", "len"], ["#set-ru", "ru"]]')
+assert s.count('["#set-order", "order"]') == 2
+sub('S[key] = key === "len" ? +b.dataset.v : b.dataset.v; save(); renderHome(); });',
+    'S[key] = key === "len" ? +b.dataset.v : b.dataset.v; if (S.order === "off" && S.act === "order") S.act = "mix"; save(); renderHome(); });')
+sub('S = Object.assign({ prog: {}, mode: "choose", len: 10, ru: "on", act: "mix", order: "on", days: [] }, load());',
+    'S = Object.assign({ prog: {}, mode: "choose", len: 10, ru: "on", act: "mix", order: "on", days: [] }, load());\n    try { const g = localStorage.getItem("corner-office-order"); if (g === "on" || g === "off") S.order = g; } catch (e) {}')
+sub('if (S.order === "off" && S.act === "order") S.act = "mix"; save(); renderHome(); });',
+    'if (S.order === "off" && S.act === "order") S.act = "mix"; if (key === "order") { try { localStorage.setItem("corner-office-order", S.order); } catch (e) {} } save(); renderHome(); });')
+sub('      document.querySelectorAll(id + " button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v) === String(S[key])));',
+    '      document.querySelectorAll(id + " button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v) === String(S[key])));\n    const ob = document.querySelector(\'#set-act button[data-v="order"]\'); if (ob) ob.hidden = S.order === "off";')
+# reset progress for the current course (in-page confirmation; settings are kept)
+sub('$("#dial").setAttribute("aria-label", C.unit + " indicator");',
+    '$("#dial").setAttribute("aria-label", C.unit + " indicator");\n    $("#reset-confirm").hidden = true; $("#reset-done").hidden = true; $("#btn-reset").hidden = false;')
+sub('  $("#btn-courses").onclick =', '''  $("#btn-reset").onclick = () => { $("#reset-name").textContent = C.name; $("#reset-confirm").hidden = false; $("#btn-reset").hidden = true; $("#reset-done").hidden = true; $("#btn-reset-cancel").focus(); };
+  $("#btn-reset-cancel").onclick = () => { $("#reset-confirm").hidden = true; $("#btn-reset").hidden = false; };
+  $("#btn-reset-yes").onclick = () => {
+    S.prog = {}; S.days = []; save();
+    $("#reset-confirm").hidden = true; $("#btn-reset").hidden = false; renderHome(); $("#reset-done").hidden = false;
+  };
+  $("#btn-courses").onclick =''')
 os.makedirs(D + 'unite', exist_ok=True)
 open(D + 'unite/app.js', 'w').write(s)
 print('unite engine ok')

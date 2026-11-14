@@ -86,8 +86,9 @@
     const nMiss = ITEMS.filter(missed).length;
     $("#review-sub").textContent = nMiss ? nMiss + " sentence" + (nMiss > 1 ? "s" : "") + " to fix" : "Nothing to review yet";
     $("#btn-review").disabled = !nMiss;
-    for (const [id, key] of [["#set-act", "act"], ["#set-mode", "mode"], ["#set-len", "len"], ["#set-ru", "ru"]])
+    for (const [id, key] of [["#set-act", "act"], ["#set-order", "order"], ["#set-mode", "mode"], ["#set-len", "len"], ["#set-ru", "ru"]])
       document.querySelectorAll(id + " button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v) === String(S[key])));
+    const ob = document.querySelector('#set-act button[data-v="order"]'); if (ob) ob.hidden = S.order === "off";
   }
 
   // ---------- session building ----------
@@ -96,7 +97,7 @@
   const words = it => fullSentence(it).split(" ");
   function kindsFor(it) {
     if (it.t !== "g") return ["mc"];
-    const k = ["gap", "ru"]; if (words(it).length >= 4 && words(it).length <= 14) k.push("order"); return k;
+    const k = ["gap", "ru"]; if (S.order !== "off" && words(it).length >= 4 && words(it).length <= 14) k.push("order"); return k;
   }
   const fits = it => S.act === "mix" || kindsFor(it).includes(S.act);
   // Mix: rotate through the activities an item allows; missing word comes up most often.
@@ -138,7 +139,8 @@
   // ---------- courses ----------
   function boot(id) {
     C = COURSES[id]; FLOORS = C.floors; NF = FLOORS.length; ITEMS = itemsOf(id); KEY = C.key;
-    S = Object.assign({ prog: {}, mode: "choose", len: 10, ru: "on", act: "mix", days: [] }, load());
+    S = Object.assign({ prog: {}, mode: "choose", len: 10, ru: "on", act: "mix", order: "on", days: [] }, load());
+    try { const g = localStorage.getItem("corner-office-order"); if (g === "on" || g === "off") S.order = g; } catch (e) {}
     document.documentElement.dataset.course = id;
     try { localStorage.setItem("corner-office-active", id); } catch (e) {}
     const txt = (sel, v) => { const el = $(sel); if (el) el.textContent = v; };
@@ -146,6 +148,7 @@
     txt("#choose-h", "Choose your " + C.unit.toLowerCase()); txt("#mix-sub", "10 sentences from every " + C.unit.toLowerCase() + " you've started");
     txt("#special-title", C.special.title); txt("#special-sub", C.special.sub); $("#special-icon").innerHTML = C.special.icon;
     $("#dial").setAttribute("aria-label", C.unit + " indicator");
+    $("#reset-confirm").hidden = true; $("#reset-done").hidden = true; $("#btn-reset").hidden = false;
     renderHome(); show("home");
   }
   function renderCourses() {
@@ -191,12 +194,13 @@
         <div class="type-row"><button class="btn primary" id="btn-check">Check</button><button class="btn" id="btn-hint">Hint</button><span class="hint-txt" id="hint"></span></div>`;
     } else if (it.kind === "gap" || it.kind === "mc") {
       cur.opts = shuffle([it.a, ...it.d]); cur.right = it.a;
-      const lab = it.kind === "gap" ? "Choose the missing word" : it.t === "q" ? "The interviewer asks · choose the strongest answer" : it.t === "u" ? "Say it like a leader" : it.t === "h" ? "Headline desk · choose the best headline" : it.t === "p" ? "Prompt lab · choose the best prompt" : "Multiple choice";
+      const lab = it.kind === "gap" ? "Choose the missing word" : it.t === "q" ? "The interviewer asks · choose the strongest answer" : it.t === "u" ? "Say it like a leader" : it.t === "h" ? "Headline desk · choose the best headline" : it.t === "p" ? "Prompt lab · choose the best prompt" : it.t === "e" ? "Fix the mistake · choose the correct sentence" : "Multiple choice";
       const pr = it.kind === "gap" ? esc(it.s).replace("___", `<span class="gap" id="gap">&nbsp;</span>`)
         : it.t === "q" ? `<span class="q-line">“${esc(it.s)}”</span>${canSpeak ? `<button class="say-q" id="btn-sayq" aria-label="Hear the question"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H3v6h3l5 4zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>Hear it</button>` : ""}`
         : it.t === "u" ? `<span class="direct"><b>Too direct</b><s>${esc(it.s)}</s></span>How would a leader say it?`
         : it.t === "h" ? `<span class="story"><b>The story</b>${esc(it.s)}</span>Which headline would you run?`
         : it.t === "p" ? `<span class="story"><b>Your goal</b>${esc(it.s)}</span>Which prompt gets the best result?`
+        : it.t === "e" ? `<span class="direct"><b>Find the mistake</b><s>${esc(it.s)}</s></span>Which sentence is correct?`
         : esc(it.s);
       html = head(lab) + `<p class="prompt rise">${pr}</p>` + optsHtml(cur.opts);
     } else if (it.kind === "ru") {
@@ -266,8 +270,8 @@
     const full = cur.t === "g" ? esc(cur.s).replace("___", `<mark>${esc(cur.a)}</mark>`) : `<mark>${esc(cur.a)}</mark>`;
     const praise = ["Correct", "Well done", "Exactly right", "Spot on", "Perfect"][Math.floor(Math.random() * 5)];
     $("#fb").innerHTML = `<div class="fb ${ok ? "ok" : "bad"} rise" role="status">
-        <span class="verdict">${ok ? "✓ " + praise : "quhp".includes(cur.t) ? "✕ Not quite — here is the strongest " + ({ h: "headline", p: "prompt" }[cur.t] || "answer") : (cur.kind === "order" || cur.kind === "ru") ? "✕ Not quite — here is the right sentence" : "✕ Not quite — the answer is “" + esc(cur.a) + "”"}</span>
-        <span class="full${"quhp".includes(cur.t) ? " answer" : ""}">${"quhp".includes(cur.t) ? esc(cur.a) : full}</span>
+        <span class="verdict">${ok ? "✓ " + praise : "quhpe".includes(cur.t) ? "✕ Not quite — here is the " + ({ h: "strongest headline", p: "strongest prompt", e: "correct sentence" }[cur.t] || "strongest answer") : (cur.kind === "order" || cur.kind === "ru") ? "✕ Not quite — here is the right sentence" : "✕ Not quite — the answer is “" + esc(cur.a) + "”"}</span>
+        <span class="full${"quhpe".includes(cur.t) ? " answer" : ""}">${"quhpe".includes(cur.t) ? esc(cur.a) : full}</span>
         ${S.ru === "on" && cur.kind !== "ru" ? `<span class="ru">${esc(cur.ru)}</span>` : ""}
         <span class="tip"><b>Tip</b><span>${esc(cur.x)}</span></span>
       </div>
@@ -309,11 +313,11 @@
   $("#floors").addEventListener("click", e => { const b = e.target.closest(".floor"); if (!b) return; const n = +b.dataset.floor;
     again = () => start(buildFloor(n), C.unit + " " + n + " · " + FLOORS[n - 1].name); again(); });
   $("#btn-mix").onclick = () => { again = () => start(buildMix(), "Mixed interview"); again(); };
-  $("#btn-special").onclick = () => { again = C.special.kind === "mock" ? () => start(buildMock(), "Mock interview", true) : () => start(buildType({ headline: "h", prompt: "p" }[C.special.kind] || "u"), C.special.title); again(); };
+  $("#btn-special").onclick = () => { again = C.special.kind === "mock" ? () => start(buildMock(), "Mock interview", true) : () => start(buildType({ headline: "h", prompt: "p", fix: "e" }[C.special.kind] || "u"), C.special.title); again(); };
   $("#btn-review").onclick = () => { again = () => { const l = buildReview(); l.length ? start(l, "Review mistakes") : home(); }; again(); };
   $("#btn-exit").onclick = home;
-  for (const [id, key] of [["#set-act", "act"], ["#set-mode", "mode"], ["#set-len", "len"], ["#set-ru", "ru"]])
-    $(id).addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S[key] = key === "len" ? +b.dataset.v : b.dataset.v; save(); renderHome(); });
+  for (const [id, key] of [["#set-act", "act"], ["#set-order", "order"], ["#set-mode", "mode"], ["#set-len", "len"], ["#set-ru", "ru"]])
+    $(id).addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S[key] = key === "len" ? +b.dataset.v : b.dataset.v; if (S.order === "off" && S.act === "order") S.act = "mix"; if (key === "order") { try { localStorage.setItem("corner-office-order", S.order); } catch (e) {} } save(); renderHome(); });
   document.addEventListener("keydown", e => {
     if (!$("#courses").hidden) return;
     if ($("#practice").hidden) { if (e.key === "Escape" && !$("#results").hidden) home(); return; }
@@ -323,6 +327,12 @@
     if (!answered && /^[1-4]$/.test(e.key) && !$("#ans")) choose(+e.key - 1);
   });
   try { speechSynthesis && speechSynthesis.getVoices(); } catch (e) {}
+  $("#btn-reset").onclick = () => { $("#reset-name").textContent = C.name; $("#reset-confirm").hidden = false; $("#btn-reset").hidden = true; $("#reset-done").hidden = true; $("#btn-reset-cancel").focus(); };
+  $("#btn-reset-cancel").onclick = () => { $("#reset-confirm").hidden = true; $("#btn-reset").hidden = false; };
+  $("#btn-reset-yes").onclick = () => {
+    S.prog = {}; S.days = []; save();
+    $("#reset-confirm").hidden = true; $("#btn-reset").hidden = false; renderHome(); $("#reset-done").hidden = false;
+  };
   $("#btn-courses").onclick = () => { if (location.hash === "#courses") route(); else location.hash = "courses"; };
   window.addEventListener("hashchange", route);
   // First visit: the chooser. Returning visitor with no link: the course they used last.

@@ -22,6 +22,13 @@ window.BANKS.tech.push({"floor":2,"items":[["g","My laptop is very slow. It keep
 ["g","Can you ___ me how to change the language settings?","show",["say","tell to","explain me"],"Можете показать, как сменить язык в настройках?","show someone how to…"],
 ["g","The sound isn't working. Is the volume ___?","muted",["mute it","muting","mutated"],"Звук не работает. Может, он выключен?","muted = без звука."],
 ["g","I've been ___ for the support team for 20 minutes.","waiting",["wait","waited","awaiting for"],"Я жду поддержку уже 20 минут.","have been + -ing."],
+["g","The video keeps ___ — the internet is slow.","buffering",["buffer","buffered","buffers"],"Видео постоянно подгружается — интернет медленный.","buffering = подгрузка."],
+["g","My keyboard isn't ___ when I press some keys.","responding",["respond","response","responsible"],"Клавиатура не реагирует на некоторые клавиши.","respond = отвечать, реагировать."],
+["g","I get a ___ \"No internet connection\".","message saying",["message say","saying message","message said that"],"Появляется сообщение «Нет подключения к интернету».","a message saying…"],
+["g","Try ___ the app and installing it again.","deleting",["delete","deleted","to deleting"],"Попробуйте удалить приложение и установить заново.","try + -ing."],
+["g","The fan is very ___. The laptop is getting hot.","loud",["loudly","aloud","loudness"],"Вентилятор очень шумный, ноутбук нагревается.","loud (adj)."],
+["g","The update ___ two hours to install.","took",["take","taked","takes"],"Обновление устанавливалось два часа.","It took … to …"],
+["g","Is it ___ to restart now? I have unsaved work.","safe",["save","safety","safely"],"Сейчас безопасно перезагружаться? У меня несохранённая работа.","safe (adj) ≠ save (verb)."],
 ["m","Which is the first thing IT support often asks?","Have you tried restarting it?",["Did you break it on purpose?","Why did you buy this?","Can you buy a new one?"],"Вы пробовали перезагрузить?","Classic first step."],
 ["m","\"The app crashes\" means…","it suddenly closes because of an error",["it works very fast","it updates automatically","it costs money"],"Приложение вылетает.","crash = аварийное закрытие."],
 ["m","\"The website is down\" means…","it is not working",["it is at the bottom of the page","it is very popular","it is loading fast"],"Сайт не работает.","down ↔ up and running."],
@@ -30,4 +37,7 @@ window.BANKS.tech.push({"floor":2,"items":[["g","My laptop is very slow. It keep
 ["m","\"Out of storage\" means…","there is no free memory left",["the shop is closed","the battery is dead","the Wi-Fi is off"],"Нет свободной памяти.","Free up space."],
 ["m","\"Phishing\" means…","fake messages that try to steal your passwords or money",["catching fish online","a fast internet connection","a type of game"],"Фишинг.","Check the sender and the link."],
 ["m","Which sentence is most polite to IT support?","Sorry to bother you, but my email has stopped working. Could you take a look?",["Fix my email now.","Email broken. Your fault.","Why does nothing ever work here?"],"Простите за беспокойство, у меня перестала работать почта. Посмотрите, пожалуйста?","Polite + clear."],
-["m","\"Clear the cache\" means…","delete temporary saved files so the site loads fresh",["clean the screen","delete your account","buy more memory"],"Очистить кэш.","A common fix for old versions showing."]]});
+["m","\"Clear the cache\" means…","delete temporary saved files so the site loads fresh",["clean the screen","delete your account","buy more memory"],"Очистить кэш.","A common fix for old versions showing."],
+["m","\"Buffering\" means…","the video is loading and pausing",["the video is finished","the video is deleted","the video is very loud"],"Подгрузка видео.","Usually because of slow internet."],
+["m","Which reply from IT support is most helpful?","Please send me a screenshot of the error and tell me what you clicked before it appeared.",["It works for me.","Buy a new laptop.","That's impossible."],"Пришлите скриншот ошибки и скажите, на что нажимали перед ней.","Ask for evidence and steps."],
+["m","\"Unsaved work\" means…","changes you haven't saved yet",["work you didn't do","a broken file","work saved in the cloud"],"Несохранённые изменения.","Save before you restart!"]]});

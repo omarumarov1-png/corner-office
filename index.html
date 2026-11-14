@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Corner Office</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Four English courses in one app: job interview, business, journalism (with sports journalism) and tech & vibe coding, with missing words, multiple choice, word order, translation, a mock interview and leader-style rewrites.">
+<meta name="description" content="Five English courses in one app: job interview, business, journalism (with sports journalism), tech & vibe coding and IT student English, with missing words, multiple choice, word order, translation, a mock interview and leader-style rewrites.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;1,6..96,500&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -43,6 +43,9 @@
 [data-course="tech"]{--bg:#0D1517; --bg-glow:#14343A; --panel:#131D20; --panel-2:#18262A; --line:rgba(79,195,201,.26); --ink:#EFE8D8; --muted:#A1B3B5; --brass:#4FC3C9; --brass-hi:#A3E7EA; --brass-ink:#06191B; --brass-deep:#1F7C82; --tint:rgba(79,195,201,.13);}
 @media (prefers-color-scheme: light){ :root:not([data-theme="dark"])[data-course="tech"], :root:not([data-theme="dark"]) [data-course="tech"]{--bg:#ECF1F2; --bg-glow:#D6E7E9; --panel:#FAFCFC; --panel-2:#F0F5F6; --line:rgba(19,124,132,.30); --ink:#122023; --muted:#556A6D; --brass:#137C84; --brass-hi:#0D5E64; --brass-ink:#F2FDFE;} }
 :root[data-theme="light"][data-course="tech"], :root[data-theme="light"] [data-course="tech"]{--bg:#ECF1F2; --bg-glow:#D6E7E9; --panel:#FAFCFC; --panel-2:#F0F5F6; --line:rgba(19,124,132,.30); --ink:#122023; --muted:#556A6D; --brass:#137C84; --brass-hi:#0D5E64; --brass-ink:#F2FDFE;}
+[data-course="itstudent"]{--bg:#12101B; --bg-glow:#2A2245; --panel:#191626; --panel-2:#201C31; --line:rgba(167,139,250,.26); --ink:#EFE8D8; --muted:#ADA6C2; --brass:#A78BFA; --brass-hi:#D6C8FF; --brass-ink:#140D2A; --brass-deep:#5B3FB8; --tint:rgba(167,139,250,.14);}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"])[data-course="itstudent"], :root:not([data-theme="dark"]) [data-course="itstudent"]{--bg:#F0EEF5; --bg-glow:#E2DCF2; --panel:#FCFBFE; --panel-2:#F4F2FA; --line:rgba(109,79,194,.30); --ink:#191427; --muted:#615A75; --brass:#6D4FC2; --brass-hi:#533A9E; --brass-ink:#F7F3FF;} }
+:root[data-theme="light"][data-course="itstudent"], :root[data-theme="light"] [data-course="itstudent"]{--bg:#F0EEF5; --bg-glow:#E2DCF2; --panel:#FCFBFE; --panel-2:#F4F2FA; --line:rgba(109,79,194,.30); --ink:#191427; --muted:#615A75; --brass:#6D4FC2; --brass-hi:#533A9E; --brass-ink:#F7F3FF;}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{background:radial-gradient(1200px 520px at 50% -120px, var(--bg-glow), transparent 70%), var(--bg); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.5;
@@ -188,6 +191,7 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
 .intro h1 em{color:var(--brass-hi)}
 .intro p{margin:0; max-width:52ch}
 .course-cards{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+.course:last-child:nth-child(odd){grid-column:1 / -1}
 @media (max-width:720px){ .course-cards{grid-template-columns:1fr} }
 .story{display:flex; flex-direction:column; gap:6px; margin-bottom:12px; font-family:var(--body); font-size:16.5px; font-weight:500; line-height:1.5; border-left:3px solid var(--brass); padding:2px 0 2px 12px}
 .story b{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:500; color:var(--brass-hi)}
@@ -217,6 +221,12 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
 .res-actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px}
 .foot{text-align:center; font-size:12.5px; color:var(--muted)}
 @media (prefers-reduced-motion: reduce){ *{animation:none!important; transition:none!important} }
+.reset-row{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center}
+.reset-confirm{display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; justify-content:center; text-align:center; border:1px solid var(--bad); background:var(--bad-bg); border-radius:14px; padding:12px 16px; font-size:14px; max-width:520px}
+.reset-actions{display:flex; gap:8px}
+.btn.danger{background:var(--bad); border-color:var(--bad); color:var(--bg); font-weight:700}
+.btn.danger:hover{filter:brightness(1.08)}
+.reset-done{color:var(--ok); font-size:14px; font-weight:600}
 </style>
 </head>
 <body>
@@ -235,7 +245,7 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
   <!-- COURSES -->
   <section id="courses" class="wrap" style="gap:22px">
     <div class="intro">
-      <div class="eyebrow">Four courses · one place</div>
+      <div class="eyebrow">Five courses · one place</div>
       <h1>Which door are you <em>walking through</em> today?</h1>
       <p class="muted">Pick a course. Each one keeps its own progress, and you can switch at any time from the Courses button.</p>
     </div>
@@ -265,9 +275,15 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
 
     <div class="settings">
       <div class="set set-wide"><span class="eyebrow">Activity</span><div class="seg" id="set-act"><button data-v="mix">Mix</button><button data-v="gap">Missing word</button><button data-v="mc">Choice</button><button data-v="order">Word order</button><button data-v="ru">Translate</button></div></div>
+      <div class="set"><span class="eyebrow">Word order</span><div class="seg" id="set-order"><button data-v="on">On</button><button data-v="off">Off</button></div></div>
       <div class="set"><span class="eyebrow">Missing word</span><div class="seg" id="set-mode"><button data-v="choose">Choose</button><button data-v="type">Type it</button></div></div>
       <div class="set"><span class="eyebrow">Session</span><div class="seg" id="set-len"><button data-v="10">10</button><button data-v="20">20</button></div></div>
       <div class="set"><span class="eyebrow">Russian</span><div class="seg" id="set-ru"><button data-v="on">Show</button><button data-v="off">Hide</button></div></div>
+    </div>
+    <div class="reset-row">
+      <button class="btn" id="btn-reset">Reset progress</button>
+      <div class="reset-confirm" id="reset-confirm" role="alertdialog" aria-live="polite" hidden><span>Reset all progress in <b id="reset-name"></b>? Your settings stay. This can't be undone.</span><span class="reset-actions"><button class="btn danger" id="btn-reset-yes">Yes, reset</button><button class="btn" id="btn-reset-cancel">Cancel</button></span></div>
+      <span class="reset-done" id="reset-done" role="status" hidden>✓ Progress reset. Start again from stage 1.</span>
     </div>
     <p class="foot">Keys: <span class="kbd">1–4</span> choose · <span class="kbd">Enter</span> check / next · <span class="kbd">Backspace</span> undo a word · <span class="kbd">Esc</span> back to the menu. Progress is saved in this browser.</p>
   </section>
@@ -319,6 +335,12 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
 <script src="t6.js"></script>
 <script src="t7.js"></script>
 <script src="t8.js"></script>
+<script src="s1.js"></script>
+<script src="s2.js"></script>
+<script src="s3.js"></script>
+<script src="s4.js"></script>
+<script src="s5.js"></script>
+<script src="s6.js"></script>
 <script src="app.js"></script>
 
 </body>

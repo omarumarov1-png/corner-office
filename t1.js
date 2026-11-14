@@ -23,6 +23,14 @@ window.BANKS.tech.push({"floor":1,"items":[["g","I ___ the new app from the App 
 ["g","This app is free to download, but some features ___ money.","cost",["costs","costing","coast"],"Приложение бесплатное, но некоторые функции стоят денег.","features (they) → cost."],
 ["g","I ___ forget to back up my photos.","never",["ever","not never","nothing"],"Я никогда не забываю делать резервную копию фото.","never + verb (no extra \"not\")."],
 ["g","Turn on ___ updates so you always have the latest version.","automatic",["automatically","automation","auto's"],"Включите автообновления, чтобы всегда была последняя версия.","automatic (adj) updates."],
+["g","My phone is running ___ of storage.","out",["off","down","away"],"В телефоне заканчивается память.","run out of = закончиться."],
+["g","Can you ___ the volume? I can't hear the video.","turn up",["turn on up","turn over","turn in"],"Можешь прибавить громкость? Я не слышу видео.","turn up / turn down."],
+["g","I ___ my photos to the cloud automatically.","sync",["sink","synced up to","think"],"Мои фото автоматически синхронизируются с облаком.","sync = синхронизировать."],
+["g","Please ___ your laptop to the projector.","connect",["connection","connecting","contact"],"Подключите ноутбук к проектору.","connect A to B."],
+["g","The ___ on my phone is cracked.","screen",["scream","screening","scene"],"У меня треснул экран телефона.","screen = экран."],
+["g","Tap and ___ the icon to move it.","hold",["held","holding","hole"],"Нажмите и удерживайте значок, чтобы переместить его.","tap and hold."],
+["g","Swipe ___ to see the next photo.","left",["leave","lift","left side to"],"Смахните влево, чтобы увидеть следующее фото.","swipe left / right / up / down."],
+["g","I need a ___ to connect my old monitor.","cable",["cabel","table","cabin"],"Мне нужен кабель, чтобы подключить старый монитор.","cable / adapter."],
 ["m","Which word means \"скачать\"?","download",["upload","unload","overload"],"Скачать.","upload = загрузить на сервер."],
 ["m","Which is a strong password?","T7#rain!Lamp92",["123456","password","myname"],"Надёжный пароль.","Long, mixed, unique."],
 ["m","Which sentence is correct?","I usually check my phone in the morning.",["I check usually my phone in the morning.","Usually I am check my phone.","I usually am check my phone."],"Обычно я проверяю телефон утром.","Adverb before the main verb."],
@@ -33,4 +41,6 @@ window.BANKS.tech.push({"floor":1,"items":[["g","I ___ the new app from the App 
 ["m","Which pair is correct?","upload a photo to Instagram / download an app to your phone",["download a photo to Instagram / upload an app to your phone","load up an app / load down a photo","upload an app from the store / download a photo to the internet"],"Загрузить фото / скачать приложение.","up = to the internet; down = to your device."],
 ["m","Which shortcut usually means \"undo\"?","Ctrl+Z (Cmd+Z on Mac)",["Ctrl+P","Ctrl+S","Ctrl+A"],"Ctrl+Z — отменить.","Ctrl+S save, Ctrl+P print, Ctrl+A select all."],
 ["m","\"Back up\" your files means…","make a safe copy in another place",["delete old files","move files to the trash","send files to a friend"],"Сделать резервную копию.","backup (noun) / back up (verb)."],
-["m","Which is a browser?","Chrome",["Windows","Excel","Python"],"Chrome — браузер.","Chrome, Safari, Firefox, Edge."]]});
+["m","Which is a browser?","Chrome",["Windows","Excel","Python"],"Chrome — браузер.","Chrome, Safari, Firefox, Edge."],
+["m","\"Sync\" means…","make the same data appear on all your devices",["delete old files","buy a new device","switch off the internet"],"Синхронизировать.","Phone ↔ laptop ↔ cloud."],
+["m","Which gesture opens the next photo on most phones?","swipe left",["double-click","right-click","press Ctrl+S"],"Смахнуть влево.","tap, double-tap, swipe, pinch."]]});

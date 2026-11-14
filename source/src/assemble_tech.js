@@ -1,7 +1,7 @@
 // Validate the journalism rows and write build/journalism/f1..f8.js (same format as the other courses).
 const fs = require("fs"), path = require("path");
-const D = path.join(__dirname, ".."), J1 = require("./new-tech.js"), J2 = require("./new-tech2.js");
-const J = {}; for (const k of Object.keys(J1)) J[k] = [...J1[k], ...(J2[k] || [])];
+const D = path.join(__dirname, ".."), J1 = require("./new-tech.js"), J2 = require("./new-tech2.js"), J3 = require("./new-tech3.js");
+const J = {}; for (const k of Object.keys(J1)) J[k] = [...J1[k], ...(J2[k] || []), ...(J3[k] || [])];
 const dir = path.join(D, "build", "tech"); fs.mkdirSync(dir, { recursive: true });
 const errs = [], seen = new Set(); let total = 0;
 for (const [fl, rows] of Object.entries(J)) {
