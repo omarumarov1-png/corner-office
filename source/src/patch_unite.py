@@ -91,6 +91,26 @@ sub('''  renderHome();
 sub('''    if ($("#practice").hidden) { if (e.key === "Escape" && !$("#results").hidden) home(); return; }''',
     '''    if (!$("#courses").hidden) return;
     if ($("#practice").hidden) { if (e.key === "Escape" && !$("#results").hidden) home(); return; }''')
+# Headline desk (type h) for the journalism course, and a generic builder for single-type drills
+sub('const buildLeader = () => shuffle(ITEMS.filter(it => it.t === "u")).slice(0, +S.len).map(it => Object.assign({}, it, { kind: "mc" }));',
+    'const buildType = t => shuffle(ITEMS.filter(it => it.t === t)).slice(0, +S.len).map(it => Object.assign({}, it, { kind: "mc" }));')
+sub('it.t === "u" ? "Say it like a leader" :', 'it.t === "u" ? "Say it like a leader" : it.t === "h" ? "Headline desk · choose the best headline" :')
+sub(': it.t === "u" ? `<span class="direct"><b>Too direct</b><s>${esc(it.s)}</s></span>How would a leader say it?`',
+    ': it.t === "u" ? `<span class="direct"><b>Too direct</b><s>${esc(it.s)}</s></span>How would a leader say it?`\n        : it.t === "h" ? `<span class="story"><b>The story</b>${esc(it.s)}</span>Which headline would you run?`')
+sub('(cur.t === "q" || cur.t === "u") ? "✕ Not quite — here is the strongest answer"', '(cur.t === "q" || cur.t === "u" || cur.t === "h") ? "✕ Not quite — here is the strongest " + (cur.t === "h" ? "headline" : "answer")')
+sub('<span class="full${cur.t === "q" || cur.t === "u" ? " answer" : ""}">${cur.t === "q" || cur.t === "u" ? esc(cur.a) : full}</span>',
+    '<span class="full${"quh".includes(cur.t) ? " answer" : ""}">${"quh".includes(cur.t) ? esc(cur.a) : full}</span>')
+s = s.replace('() => start(buildLeader(), "Say it like a leader"); again(); };',
+    '() => start(buildType({ headline: "h", prompt: "p" }[C.special.kind] || "u"), C.special.title); again(); };')
+# Prompt lab (type p) for the tech course
+sub('it.t === "h" ? "Headline desk · choose the best headline" :', 'it.t === "h" ? "Headline desk · choose the best headline" : it.t === "p" ? "Prompt lab · choose the best prompt" :')
+sub(': it.t === "h" ? `<span class="story"><b>The story</b>${esc(it.s)}</span>Which headline would you run?`',
+    ': it.t === "h" ? `<span class="story"><b>The story</b>${esc(it.s)}</span>Which headline would you run?`\n        : it.t === "p" ? `<span class="story"><b>Your goal</b>${esc(it.s)}</span>Which prompt gets the best result?`')
+sub('(cur.t === "q" || cur.t === "u" || cur.t === "h") ? "✕ Not quite — here is the strongest " + (cur.t === "h" ? "headline" : "answer")',
+    '"quhp".includes(cur.t) ? "✕ Not quite — here is the strongest " + ({ h: "headline", p: "prompt" }[cur.t] || "answer")')
+sub('<span class="full${"quh".includes(cur.t) ? " answer" : ""}">${"quh".includes(cur.t) ? esc(cur.a) : full}</span>',
+    '<span class="full${"quhp".includes(cur.t) ? " answer" : ""}">${"quhp".includes(cur.t) ? esc(cur.a) : full}</span>')
+assert 'buildType({ headline: "h", prompt: "p" }' in s
 os.makedirs(D + 'unite', exist_ok=True)
 open(D + 'unite/app.js', 'w').write(s)
 print('unite engine ok')

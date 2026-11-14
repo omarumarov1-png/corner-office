@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Corner Office</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Two English courses in one app: job interview English and business English, with missing words, multiple choice, word order, translation, a mock interview and leader-style rewrites.">
+<meta name="description" content="Four English courses in one app: job interview, business, journalism (with sports journalism) and tech & vibe coding, with missing words, multiple choice, word order, translation, a mock interview and leader-style rewrites.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;1,6..96,500&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -37,6 +37,12 @@
 [data-course="interview"]{--bg:#0D1221; --bg-glow:#1D2747; --panel:#141B2E; --panel-2:#1A2340; --line:rgba(214,163,115,.26); --ink:#EFE8D8; --muted:#A7ADBF; --brass:#D6A373; --brass-hi:#F2CDA4; --brass-ink:#1E1208; --brass-deep:#8f5a33; --tint:rgba(214,163,115,.14);}
 @media (prefers-color-scheme: light){ :root:not([data-theme="dark"])[data-course="interview"], :root:not([data-theme="dark"]) [data-course="interview"]{--bg:#ECEEF4; --bg-glow:#DDE2EE; --panel:#FAFAFC; --panel-2:#F1F2F7; --line:rgba(150,95,50,.32); --ink:#141A2C; --muted:#5A6070; --brass:#A0663A; --brass-hi:#80491F; --brass-ink:#FFF6EC;} }
 :root[data-theme="light"][data-course="interview"], :root[data-theme="light"] [data-course="interview"]{--bg:#ECEEF4; --bg-glow:#DDE2EE; --panel:#FAFAFC; --panel-2:#F1F2F7; --line:rgba(150,95,50,.32); --ink:#141A2C; --muted:#5A6070; --brass:#A0663A; --brass-hi:#80491F; --brass-ink:#FFF6EC;}
+[data-course="journalism"]{--bg:#150F11; --bg-glow:#3A1A1E; --panel:#1D1517; --panel-2:#261B1E; --line:rgba(226,114,91,.26); --ink:#EFE8D8; --muted:#B5A6A6; --brass:#E2725B; --brass-hi:#F6A891; --brass-ink:#22100B; --brass-deep:#9E3B28; --tint:rgba(226,114,91,.14);}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"])[data-course="journalism"], :root:not([data-theme="dark"]) [data-course="journalism"]{--bg:#F1EEEA; --bg-glow:#EBDDD8; --panel:#FCFBF9; --panel-2:#F5F1EE; --line:rgba(170,60,40,.30); --ink:#1E1517; --muted:#6A5B5B; --brass:#B23A2A; --brass-hi:#8E2A1C; --brass-ink:#FFF4EF;} }
+:root[data-theme="light"][data-course="journalism"], :root[data-theme="light"] [data-course="journalism"]{--bg:#F1EEEA; --bg-glow:#EBDDD8; --panel:#FCFBF9; --panel-2:#F5F1EE; --line:rgba(170,60,40,.30); --ink:#1E1517; --muted:#6A5B5B; --brass:#B23A2A; --brass-hi:#8E2A1C; --brass-ink:#FFF4EF;}
+[data-course="tech"]{--bg:#0D1517; --bg-glow:#14343A; --panel:#131D20; --panel-2:#18262A; --line:rgba(79,195,201,.26); --ink:#EFE8D8; --muted:#A1B3B5; --brass:#4FC3C9; --brass-hi:#A3E7EA; --brass-ink:#06191B; --brass-deep:#1F7C82; --tint:rgba(79,195,201,.13);}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"])[data-course="tech"], :root:not([data-theme="dark"]) [data-course="tech"]{--bg:#ECF1F2; --bg-glow:#D6E7E9; --panel:#FAFCFC; --panel-2:#F0F5F6; --line:rgba(19,124,132,.30); --ink:#122023; --muted:#556A6D; --brass:#137C84; --brass-hi:#0D5E64; --brass-ink:#F2FDFE;} }
+:root[data-theme="light"][data-course="tech"], :root[data-theme="light"] [data-course="tech"]{--bg:#ECF1F2; --bg-glow:#D6E7E9; --panel:#FAFCFC; --panel-2:#F0F5F6; --line:rgba(19,124,132,.30); --ink:#122023; --muted:#556A6D; --brass:#137C84; --brass-hi:#0D5E64; --brass-ink:#F2FDFE;}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{background:radial-gradient(1200px 520px at 50% -120px, var(--bg-glow), transparent 70%), var(--bg); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.5;
@@ -182,7 +188,9 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
 .intro h1 em{color:var(--brass-hi)}
 .intro p{margin:0; max-width:52ch}
 .course-cards{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
-@media (max-width:680px){ .course-cards{grid-template-columns:1fr} }
+@media (max-width:720px){ .course-cards{grid-template-columns:1fr} }
+.story{display:flex; flex-direction:column; gap:6px; margin-bottom:12px; font-family:var(--body); font-size:16.5px; font-weight:500; line-height:1.5; border-left:3px solid var(--brass); padding:2px 0 2px 12px}
+.story b{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:500; color:var(--brass-hi)}
 .course{display:flex; flex-direction:column; gap:12px; text-decoration:none; color:var(--ink); border:1px solid var(--line); border-radius:22px; padding:24px;
   background:radial-gradient(420px 220px at 100% 0, var(--bg-glow), transparent 70%), linear-gradient(180deg, var(--panel), var(--panel-2)); position:relative; transition:transform .2s, border-color .2s}
 .course::before{content:""; position:absolute; inset:9px; border:1px solid var(--line); opacity:.45; border-radius:15px; pointer-events:none}
@@ -227,7 +235,7 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
   <!-- COURSES -->
   <section id="courses" class="wrap" style="gap:22px">
     <div class="intro">
-      <div class="eyebrow">Two courses · one place</div>
+      <div class="eyebrow">Four courses · one place</div>
       <h1>Which door are you <em>walking through</em> today?</h1>
       <p class="muted">Pick a course. Each one keeps its own progress, and you can switch at any time from the Courses button.</p>
     </div>
@@ -295,6 +303,22 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
 <script src="b6.js"></script>
 <script src="b7.js"></script>
 <script src="b8.js"></script>
+<script src="j1.js"></script>
+<script src="j2.js"></script>
+<script src="j3.js"></script>
+<script src="j4.js"></script>
+<script src="j5.js"></script>
+<script src="j6.js"></script>
+<script src="j7.js"></script>
+<script src="j8.js"></script>
+<script src="t1.js"></script>
+<script src="t2.js"></script>
+<script src="t3.js"></script>
+<script src="t4.js"></script>
+<script src="t5.js"></script>
+<script src="t6.js"></script>
+<script src="t7.js"></script>
+<script src="t8.js"></script>
 <script src="app.js"></script>
 
 </body>

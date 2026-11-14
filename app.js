@@ -127,7 +127,7 @@
     const mid = shuffle(q.filter(it => it !== first && it !== last)).slice(0, 6);
     return [first, ...mid, last].filter(Boolean).map(it => Object.assign({}, it, { kind: "mc" }));
   }
-  const buildLeader = () => shuffle(ITEMS.filter(it => it.t === "u")).slice(0, +S.len).map(it => Object.assign({}, it, { kind: "mc" }));
+  const buildType = t => shuffle(ITEMS.filter(it => it.t === t)).slice(0, +S.len).map(it => Object.assign({}, it, { kind: "mc" }));
   const buildReview = () => assign(shuffle(ITEMS.filter(it => missed(it) && fits(it))).slice(0, +S.len));
 
   // ---------- practice ----------
@@ -191,10 +191,12 @@
         <div class="type-row"><button class="btn primary" id="btn-check">Check</button><button class="btn" id="btn-hint">Hint</button><span class="hint-txt" id="hint"></span></div>`;
     } else if (it.kind === "gap" || it.kind === "mc") {
       cur.opts = shuffle([it.a, ...it.d]); cur.right = it.a;
-      const lab = it.kind === "gap" ? "Choose the missing word" : it.t === "q" ? "The interviewer asks · choose the strongest answer" : it.t === "u" ? "Say it like a leader" : "Multiple choice";
+      const lab = it.kind === "gap" ? "Choose the missing word" : it.t === "q" ? "The interviewer asks · choose the strongest answer" : it.t === "u" ? "Say it like a leader" : it.t === "h" ? "Headline desk · choose the best headline" : it.t === "p" ? "Prompt lab · choose the best prompt" : "Multiple choice";
       const pr = it.kind === "gap" ? esc(it.s).replace("___", `<span class="gap" id="gap">&nbsp;</span>`)
         : it.t === "q" ? `<span class="q-line">“${esc(it.s)}”</span>${canSpeak ? `<button class="say-q" id="btn-sayq" aria-label="Hear the question"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H3v6h3l5 4zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>Hear it</button>` : ""}`
         : it.t === "u" ? `<span class="direct"><b>Too direct</b><s>${esc(it.s)}</s></span>How would a leader say it?`
+        : it.t === "h" ? `<span class="story"><b>The story</b>${esc(it.s)}</span>Which headline would you run?`
+        : it.t === "p" ? `<span class="story"><b>Your goal</b>${esc(it.s)}</span>Which prompt gets the best result?`
         : esc(it.s);
       html = head(lab) + `<p class="prompt rise">${pr}</p>` + optsHtml(cur.opts);
     } else if (it.kind === "ru") {
@@ -264,8 +266,8 @@
     const full = cur.t === "g" ? esc(cur.s).replace("___", `<mark>${esc(cur.a)}</mark>`) : `<mark>${esc(cur.a)}</mark>`;
     const praise = ["Correct", "Well done", "Exactly right", "Spot on", "Perfect"][Math.floor(Math.random() * 5)];
     $("#fb").innerHTML = `<div class="fb ${ok ? "ok" : "bad"} rise" role="status">
-        <span class="verdict">${ok ? "✓ " + praise : (cur.t === "q" || cur.t === "u") ? "✕ Not quite — here is the strongest answer" : (cur.kind === "order" || cur.kind === "ru") ? "✕ Not quite — here is the right sentence" : "✕ Not quite — the answer is “" + esc(cur.a) + "”"}</span>
-        <span class="full${cur.t === "q" || cur.t === "u" ? " answer" : ""}">${cur.t === "q" || cur.t === "u" ? esc(cur.a) : full}</span>
+        <span class="verdict">${ok ? "✓ " + praise : "quhp".includes(cur.t) ? "✕ Not quite — here is the strongest " + ({ h: "headline", p: "prompt" }[cur.t] || "answer") : (cur.kind === "order" || cur.kind === "ru") ? "✕ Not quite — here is the right sentence" : "✕ Not quite — the answer is “" + esc(cur.a) + "”"}</span>
+        <span class="full${"quhp".includes(cur.t) ? " answer" : ""}">${"quhp".includes(cur.t) ? esc(cur.a) : full}</span>
         ${S.ru === "on" && cur.kind !== "ru" ? `<span class="ru">${esc(cur.ru)}</span>` : ""}
         <span class="tip"><b>Tip</b><span>${esc(cur.x)}</span></span>
       </div>
@@ -307,7 +309,7 @@
   $("#floors").addEventListener("click", e => { const b = e.target.closest(".floor"); if (!b) return; const n = +b.dataset.floor;
     again = () => start(buildFloor(n), C.unit + " " + n + " · " + FLOORS[n - 1].name); again(); });
   $("#btn-mix").onclick = () => { again = () => start(buildMix(), "Mixed interview"); again(); };
-  $("#btn-special").onclick = () => { again = C.special.kind === "mock" ? () => start(buildMock(), "Mock interview", true) : () => start(buildLeader(), "Say it like a leader"); again(); };
+  $("#btn-special").onclick = () => { again = C.special.kind === "mock" ? () => start(buildMock(), "Mock interview", true) : () => start(buildType({ headline: "h", prompt: "p" }[C.special.kind] || "u"), C.special.title); again(); };
   $("#btn-review").onclick = () => { again = () => { const l = buildReview(); l.length ? start(l, "Review mistakes") : home(); }; again(); };
   $("#btn-exit").onclick = home;
   for (const [id, key] of [["#set-act", "act"], ["#set-mode", "mode"], ["#set-len", "len"], ["#set-ru", "ru"]])

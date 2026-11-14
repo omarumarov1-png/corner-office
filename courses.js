@@ -1,4 +1,4 @@
-// The two courses. Order here = order on the chooser.
+// The four courses. Order here = order on the chooser.
 window.COURSES = {
  "interview": {
   "key": "hired-interview-v1",
@@ -133,6 +133,154 @@ window.COURSES = {
   "eyebrow": "Business English · 8 units",
   "h1": "Speak like the leader <em>you already are</em>.",
   "lead": "Meetings, presentations, negotiations and dinners. Eight units follow a real working day, from the first handshake to the final toast."
+ },
+ "journalism": {
+  "key": "corner-office-journalism-v1",
+  "unit": "Stage",
+  "name": "Journalism",
+  "mark": "J",
+  "level": "A2 → C1 · 8 stages",
+  "eyebrow": "Journalism & sports media · 8 stages",
+  "h1": "Get the story. <em>Tell it right.</em>",
+  "lead": "News English from your first headline to the post-match press conference, with a special focus on sports journalism.",
+  "special": {
+   "kind": "headline",
+   "title": "Headline desk",
+   "sub": "Read the story, pick the headline an editor would run",
+   "icon": "<path d=\"M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M7 9h7M7 13h7M7 16h4\"/>"
+  },
+  "floors": [
+   {
+    "n": 1,
+    "name": "Newsroom Basics",
+    "short": "Newsroom",
+    "cefr": "A2",
+    "desc": "Media words, news sections, past simple for news"
+   },
+   {
+    "n": 2,
+    "name": "Headlines & 5W1H",
+    "short": "Headlines",
+    "cefr": "A2–B1",
+    "desc": "Headline language, the lead, the inverted pyramid"
+   },
+   {
+    "n": 3,
+    "name": "Interviewing",
+    "short": "Interviews",
+    "cefr": "B1",
+    "desc": "Open and follow-up questions, recording, quotes"
+   },
+   {
+    "n": 4,
+    "name": "Match Day",
+    "short": "Match day",
+    "cefr": "B1",
+    "desc": "Football, boxing, tennis, athletics, Olympics, esports"
+   },
+   {
+    "n": 5,
+    "name": "Commentary & Match Reports",
+    "short": "Commentary",
+    "cefr": "B1+",
+    "desc": "Live commentary, strong verbs, writing the report"
+   },
+   {
+    "n": 6,
+    "name": "Press Conferences & Transfers",
+    "short": "Press room",
+    "cefr": "B2",
+    "desc": "Reported speech, rumours, contracts, quotes"
+   },
+   {
+    "n": 7,
+    "name": "Ethics & Fact-checking",
+    "short": "Ethics",
+    "cefr": "B2+",
+    "desc": "Sources, bias, corrections, doping and match-fixing stories"
+   },
+   {
+    "n": 8,
+    "name": "Features, Opinion & Broadcast",
+    "short": "Features",
+    "cefr": "C1",
+    "desc": "Human stories, columns, radio and podcast language"
+   }
+  ]
+ },
+ "tech": {
+  "key": "corner-office-tech-v1",
+  "unit": "Stage",
+  "name": "Tech & Vibe Coding",
+  "mark": "T",
+  "level": "A2 → C1 · 8 stages",
+  "eyebrow": "IT, tech & vibe coding · 8 stages",
+  "h1": "Talk tech. <em>Build with AI.</em>",
+  "lead": "Everyday tech English, code and teamwork words, and how to prompt, debug and ship software with an AI assistant.",
+  "special": {
+   "kind": "prompt",
+   "title": "Prompt lab",
+   "sub": "Pick the prompt that gets the best result from an AI",
+   "icon": "<path d=\"M4 6l5 6-5 6M12 18h8\"/>"
+  },
+  "floors": [
+   {
+    "n": 1,
+    "name": "Digital Basics",
+    "short": "Digital basics",
+    "cefr": "A2",
+    "desc": "Devices, apps, accounts, everyday tech verbs"
+   },
+   {
+    "n": 2,
+    "name": "Tech Problems & Support",
+    "short": "Tech support",
+    "cefr": "A2–B1",
+    "desc": "Freezes, crashes, error messages, asking for help"
+   },
+   {
+    "n": 3,
+    "name": "Code & Software Words",
+    "short": "Code words",
+    "cefr": "B1",
+    "desc": "Bugs, functions, frontend, backend, APIs"
+   },
+   {
+    "n": 4,
+    "name": "Working in a Tech Team",
+    "short": "Tech team",
+    "cefr": "B1+",
+    "desc": "Git, pull requests, stand-ups, code review"
+   },
+   {
+    "n": 5,
+    "name": "Vibe Coding: Prompting AI",
+    "short": "Vibe coding",
+    "cefr": "B1+",
+    "desc": "Clear prompts, context, constraints, iterating"
+   },
+   {
+    "n": 6,
+    "name": "Debugging with AI",
+    "short": "Debugging",
+    "cefr": "B2",
+    "desc": "Bug reports, errors, testing, narrowing down"
+   },
+   {
+    "n": 7,
+    "name": "Shipping & Product",
+    "short": "Shipping",
+    "cefr": "B2",
+    "desc": "Launches, metrics, privacy, accessibility"
+   },
+   {
+    "n": 8,
+    "name": "Tech Talk & Careers",
+    "short": "Tech careers",
+    "cefr": "C1",
+    "desc": "Explaining tech, demos, interviews, trade-offs"
+   }
+  ]
  }
 };
-window.BANKS = { interview: [], business: [] };
+window.BANKS = { interview: [], business: [], journalism: [], tech: [] };
