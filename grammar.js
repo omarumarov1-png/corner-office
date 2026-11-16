@@ -8,7 +8,7 @@
   const G = window.GRAMMAR = window.GRAMMAR || { units: [] };
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   // inline markup in rule text: **bold**, _italic_, [[form]] highlighted form
-  const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/(^|[\s(«])_(.+?)_(?=[\s.,;:!?)»]|$)/g, "$1<i>$2</i>").replace(/\[\[(.+?)\]\]/g, '<span class="form">$1</span>');
+  const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/(^|[\s(«])_(.+?)_(?=[\s.,;:!?)»]|$)/g, "$1<i>$2</i>").replace(/\[\[(.+?)\]\]/g, '<span class="form">$1</span>').replace(/~~(.+?)~~/g, "<s>$1</s>");
 
   // Flatten units into the bank format the engine already reads (one bank entry per exercise, tagged with unit + exercise number).
   G.toBanks = function () {
