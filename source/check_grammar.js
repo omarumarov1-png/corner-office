@@ -3,7 +3,7 @@
 global.window = {};
 const fs = require("fs"), path = require("path");
 const root = path.join(__dirname, "..");
-fs.readdirSync(root).filter(f => /^gr\d+\.js$/.test(f)).sort().forEach(f => require(path.join(root, f)));
+require(path.join(root, "grammar.js")); fs.readdirSync(root).filter(f => /^gr\d+b?\.js$/.test(f)).sort().forEach(f => require(path.join(root, f)));
 const U = window.GRAMMAR.units, errs = [], seenN = new Set(), seenQ = new Set();
 let items = 0, minPer = 1e9, maxPer = 0;
 for (const u of U) {

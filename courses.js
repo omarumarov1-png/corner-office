@@ -360,7 +360,7 @@ window.COURSES.grammar = {
    "name": "Present tenses",
    "short": "Present",
    "cefr": "A1–A2",
-   "desc": "am/is/are, Present Continuous, Present Simple, have got"
+   "desc": "am/is/are, Present Continuous, Present Simple, have got, state verbs"
   },
   {
    "n": 2,
@@ -409,7 +409,7 @@ window.COURSES.grammar = {
    "name": "Reported speech",
    "short": "Reported",
    "cefr": "B1",
-   "desc": "said that, asked if, told me to"
+   "desc": "said that, asked if, told me to, reporting verbs"
   },
   {
    "n": 9,
@@ -430,7 +430,7 @@ window.COURSES.grammar = {
    "name": "Nouns, articles, determiners",
    "short": "Articles",
    "cefr": "A1–B1",
-   "desc": "a/an/the, some/any, much/many, possessives"
+   "desc": "a/an/the, some/any, much/many, possessives, pronouns"
   },
   {
    "n": 12,
@@ -452,11 +452,53 @@ window.COURSES.grammar = {
    "short": "Prepositions",
    "cefr": "A2–B1",
    "desc": "at/on/in, verb + preposition, phrasal verbs"
+  },
+  {
+   "n": 15,
+   "name": "Narrative & advanced tenses",
+   "short": "Narrative",
+   "cefr": "B2",
+   "desc": "Past Perfect Continuous, future in the past, was going to"
+  },
+  {
+   "n": 16,
+   "name": "Inversion & emphasis",
+   "short": "Emphasis",
+   "cefr": "B2–C1",
+   "desc": "Never have I…, cleft sentences, emphatic do"
+  },
+  {
+   "n": 17,
+   "name": "Participle & reduced clauses",
+   "short": "Participles",
+   "cefr": "B2–C1",
+   "desc": "having done, -ing/-ed clauses, reduced relatives"
+  },
+  {
+   "n": 18,
+   "name": "Unreal past & subjunctive",
+   "short": "Unreal past",
+   "cefr": "B2–C1",
+   "desc": "it's time, would rather, as if, suggest that"
+  },
+  {
+   "n": 19,
+   "name": "Ellipsis & substitution",
+   "short": "Ellipsis",
+   "cefr": "B2–C1",
+   "desc": "so/not, one/ones, do so, leaving words out"
+  },
+  {
+   "n": 20,
+   "name": "Linking & discourse",
+   "short": "Discourse",
+   "cefr": "B2–C1",
+   "desc": "whereas, nevertheless, moreover, in addition, as a result"
   }
  ],
  "name": "Grammar, Unit by Unit",
  "mark": "G",
- "level": "A1 → B2 · 14 parts",
+ "level": "A1 → C1 · every grammar topic",
  "eyebrow": "English grammar · rule + practice in every unit",
  "h1": "Every rule, <em>unit</em> by <em>unit</em>.",
  "lead": "Each unit is a spread: the rule with examples and tables on one side, numbered exercises on the other. Start with the study guide test."

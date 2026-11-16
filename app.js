@@ -57,15 +57,15 @@
   // ---------- dial ----------
   function drawDial(floor) {
     const cx = 130, cy = 140, r = 100;
-    const step = Math.PI / (NF - 1), ang = n => Math.PI - (n - 1) * step; // floor 1 at left, last at right
+    const step = Math.PI / Math.max(1, NF - 1), ang = n => Math.PI - (n - 1) * step; // floor 1 at left, last at right
     let g = `<defs><linearGradient id="br" x1="0" x2="1"><stop offset="0" stop-color="var(--brass)"/><stop offset="1" stop-color="var(--brass-hi)"/></linearGradient></defs>`;
     g += `<path d="M ${cx - r - 14} ${cy} A ${r + 14} ${r + 14} 0 0 1 ${cx + r + 14} ${cy}" fill="none" stroke="var(--line)" stroke-width="1"/>`;
     g += `<path d="M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}" fill="none" stroke="url(#br)" stroke-width="2"/>`;
-    const T = (NF - 1) * 5; for (let k = 0; k <= T; k++) { const a = Math.PI - k * Math.PI / T, l = k % 5 ? 6 : 12;
+    const T = Math.max(1, NF - 1) * 5; for (let k = 0; k <= T; k++) { const a = Math.PI - k * Math.PI / T, l = k % 5 ? 6 : 12;
       g += `<line x1="${cx + Math.cos(a) * r}" y1="${cy - Math.sin(a) * r}" x2="${cx + Math.cos(a) * (r - l)}" y2="${cy - Math.sin(a) * (r - l)}" stroke="var(--brass)" stroke-width="${k % 5 ? 1 : 1.6}"/>`; }
     for (let n = 1; n <= NF; n++) { const a = ang(n), x = cx + Math.cos(a) * (r - 28), y = cy - Math.sin(a) * (r - 28);
       g += `<text x="${x}" y="${y + 6}" text-anchor="middle" font-family="Bodoni Moda, Georgia, serif" font-size="${(n === floor ? 21 : 16) - (NF > 6 ? 2 : 0)}" font-weight="700" fill="${n === floor ? "var(--brass-hi)" : "var(--muted)"}">${n}</text>`; }
-    g += `<g class="needle" style="transform:rotate(${(floor - 1) * 180 / (NF - 1)}deg)"><line x1="${cx}" y1="${cy}" x2="${cx - r + 40}" y2="${cy}" stroke="var(--brass-hi)" stroke-width="3" stroke-linecap="round"/><path d="M ${cx - r + 34} ${cy} l 10 -5 v 10 z" fill="var(--brass-hi)"/></g>`;
+    g += `<g class="needle" style="transform:rotate(${NF > 1 ? (floor - 1) * 180 / (NF - 1) : 0}deg)"><line x1="${cx}" y1="${cy}" x2="${cx - r + 40}" y2="${cy}" stroke="var(--brass-hi)" stroke-width="3" stroke-linecap="round"/><path d="M ${cx - r + 34} ${cy} l 10 -5 v 10 z" fill="var(--brass-hi)"/></g>`;
     g += `<circle cx="${cx}" cy="${cy}" r="11" fill="var(--panel)" stroke="var(--brass)" stroke-width="2"/><circle cx="${cx}" cy="${cy}" r="4" fill="var(--brass-hi)"/>`;
     g += `<text x="${cx}" y="${cy + 26}" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" letter-spacing="2.5" fill="var(--muted)">${C.unit.toUpperCase()} ${floor} · ${(FLOORS[floor - 1].short || FLOORS[floor - 1].name).toUpperCase()}</text>`;
     const svg = $("#dial"); svg.setAttribute("viewBox", "0 0 260 172"); svg.innerHTML = g;
@@ -159,7 +159,9 @@
 
   // ---------- courses ----------
   function boot(id) {
-    C = COURSES[id]; FLOORS = C.floors; NF = FLOORS.length; ITEMS = itemsOf(id); KEY = C.key;
+    C = COURSES[id]; ITEMS = itemsOf(id); KEY = C.key;
+    // A course that grows part by part (grammar) shows only the parts that already have units; parts are written in order.
+    FLOORS = C.units ? C.floors.filter(f => ITEMS.some(it => it.floor === f.n)) : C.floors; NF = FLOORS.length;
     S = Object.assign({ prog: {}, mode: "choose", len: 10, ru: "on", act: "mix", order: "on", days: [] }, load());
     try { const g = localStorage.getItem("corner-office-order"); if (g === "on" || g === "off") S.order = g; } catch (e) {}
     document.documentElement.dataset.course = id;
@@ -189,7 +191,7 @@
     }).join("");
     show("courses");
   }
-  const NFof = c => c.floors.length;
+  const NFof = c => c.units && window.GRAMMAR ? new Set(window.GRAMMAR.units.map(u => u.floor)).size : c.floors.length;
   function route() {
     const h = location.hash.slice(1);
     if (COURSES[h]) return boot(h);

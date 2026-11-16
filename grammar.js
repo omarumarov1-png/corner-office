@@ -17,6 +17,8 @@
     return out;
   };
   G.unit = n => G.units.find(u => u.n === n);
+  // more(n, [exercises]) appends further numbered exercises to unit n (files gr01b.js… load after gr01.js…).
+  G.more = (n, exs) => { const u = G.unit(n); if (!u) throw new Error("more(): no unit " + n); u.ex.push(...exs); };
   G.unitsOf = floor => G.units.filter(u => u.floor === floor).sort((a, b) => a.n - b.n);
 
   // ---------- rule page (left page of the spread) ----------
