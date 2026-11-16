@@ -80,7 +80,12 @@ button{font:inherit; color:inherit; cursor:pointer}
 .g-sec p i, .g-ex i{color:var(--brass-hi); font-style:italic}
 .g-sec .form, .g-ex .form, .g-table .form{font-family:var(--mono); font-size:.92em; color:var(--brass-hi); background:var(--tint); padding:1px 6px; border-radius:6px; white-space:nowrap}
 .g-note{border-left:3px solid var(--brass); padding:4px 0 4px 12px; color:var(--muted)!important; font-size:14.5px}
-.g-table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px}
+.g-table-wrap{overflow-x:auto; max-width:100%; border:1px solid var(--line); border-radius:12px}
+.g-sec{min-width:0}
+#rule, #section{min-width:0; width:100%}
+#rule > .card, #section > .card{max-width:100%; min-width:0; box-sizing:border-box}
+.g-table-wrap{width:100%}
+@media (max-width:480px){ .g-table{font-size:13.5px} .g-table th, .g-table td{padding:8px 8px} }
 .g-table{border-collapse:collapse; width:100%; font-size:15px}
 .g-table th{font-family:var(--mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--brass); text-align:left; padding:10px 12px; background:var(--tint)}
 .g-table td{padding:9px 12px; border-top:1px solid var(--line); vertical-align:top}
