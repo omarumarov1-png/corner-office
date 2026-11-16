@@ -6,8 +6,10 @@
   let C, FLOORS, NF, ITEMS = [], KEY, S;
   const itemsOf = id => {
     const out = [];
-    (window.BANKS[id] || []).slice().sort((a, b) => a.floor - b.floor).forEach(f => f.items.forEach((r, i) => {
-      out.push({ id: f.floor + "-" + (i + 1), floor: f.floor, idx: i, t: r[0], s: r[1], a: r[2], d: r[3], ru: r[4], x: r[5] });
+    const banks = COURSES[id].units && window.GRAMMAR ? window.GRAMMAR.toBanks() : (window.BANKS[id] || []);
+    banks.slice().sort((a, b) => a.floor - b.floor || (a.unit || 0) - (b.unit || 0) || (a.exn || 0) - (b.exn || 0)).forEach(f => f.items.forEach((r, i) => {
+      out.push({ id: f.unit ? f.floor + "-" + f.unit + "-" + f.exn + "-" + (i + 1) : f.floor + "-" + (i + 1), floor: f.floor, idx: i, u: f.unit, exn: f.exn, task: f.task,
+        t: r[0], s: r[1], a: r[2], d: r[3], ru: r[4], x: r[5] });
     }));
     return out;
   };
@@ -44,7 +46,13 @@
     } catch (e) {}
   }
   const canSpeak = (() => { try { return "speechSynthesis" in window; } catch (e) { return false; } })();
-  const fullSentence = it => it.t === "g" ? it.s.replace("___", it.a) : it.a;
+  // Several gaps: the answer "Are … listening" fills each ___ in order. wrap(part) adds markup around each filled part.
+  const parts = a => String(a).split(/\s*…\s*/);
+  const fill = (s, a, wrap) => { const p = parts(a); let k = 0; return s.replace(/___/g, () => { const x = p[Math.min(k++, p.length - 1)]; return wrap ? wrap(x) : x; }); };
+  const fillEsc = (s, a, wrap) => { const p = parts(a); let k = 0; return esc(s).replace(/___/g, () => wrap(esc(p[Math.min(k++, p.length - 1)]))); };
+  const nGaps = s => (String(s).match(/___/g) || []).length;
+  const noHint = x => String(x).replace(/\s*\([^()]*\)\s*$/, "");
+  const fullSentence = it => it.t === "g" ? noHint(fill(it.s, it.a)) : it.a;
 
   // ---------- dial ----------
   function drawDial(floor) {
@@ -128,12 +136,25 @@
     const mid = shuffle(q.filter(it => it !== first && it !== last)).slice(0, 6);
     return [first, ...mid, last].filter(Boolean).map(it => Object.assign({}, it, { kind: "mc" }));
   }
+  // Grammar: a unit's exercises in book order (unanswered first), one exercise, a part's mixed review, the study-guide test.
+  const byUnit = u => ITEMS.filter(it => it.u === u);
+  function buildUnit(u) { const items = byUnit(u).filter(fits); const fresh = items.filter(it => !S.prog[it.id]);
+    return assign([...fresh, ...shuffle(items.filter(missed)), ...shuffle(items.filter(mastered))].slice(0, +S.len)); }
+  const buildExercise = (u, k) => assign(ITEMS.filter(it => it.u === u && it.exn === k));
+  const buildPartMix = n => assign(shuffle(byFloor(n).filter(fits)).slice(0, +S.len));
+  function buildGuide() { // one question per unit, weakest units first, at most 25
+    const units = [...new Set(ITEMS.map(it => it.u))];
+    const score = u => byUnit(u).filter(mastered).length / byUnit(u).length;
+    const pick = units.sort((a, b) => score(a) - score(b) || a - b).slice(0, 25).sort((a, b) => a - b);
+    return pick.map(u => { const c = byUnit(u).filter(it => it.t === "g" || it.t === "e"); return Object.assign({}, c[Math.floor(Math.random() * c.length)], { kind: "mc" }); }).filter(x => x.id);
+  }
+  let guide = false;
   const buildType = t => shuffle(ITEMS.filter(it => it.t === t)).slice(0, +S.len).map(it => Object.assign({}, it, { kind: "mc" }));
   const buildReview = () => assign(shuffle(ITEMS.filter(it => missed(it) && fits(it))).slice(0, +S.len));
 
   // ---------- practice ----------
   let Q = [], qi = 0, res = [], label = "", answered = false, cur = null, mock = false;
-  function show(id) { for (const s of ["courses", "home", "practice", "results"]) $("#" + s).hidden = s !== id; $("#btn-courses").hidden = id === "courses";
+  function show(id) { for (const s of ["courses", "home", "section", "rule", "practice", "results"]) { const el = $("#" + s); if (el) el.hidden = s !== id; } $("#btn-courses").hidden = id === "courses";
     document.querySelectorAll(".stats .pill:not(.pill-btn)").forEach(el => el.hidden = id === "courses"); window.scrollTo({ top: 0 }); }
 
   // ---------- courses ----------
@@ -175,8 +196,8 @@
     renderCourses();
   }
 
-  function start(list, lab, isMock) {
-    if (!list.length) return;
+  function start(list, lab, isMock, isGuide) {
+    if (!list.length) return; guide = !!isGuide;
     mock = !!isMock; Q = list; qi = 0; res = []; label = lab; show("practice"); renderQ();
   }
   function renderSegs() {
@@ -186,16 +207,17 @@
   const optsHtml = opts => `<div class="opts ${opts.some(o => o.length > 34) ? "long" : ""}">${opts.map((o, i) => `<button class="opt" data-i="${i}"><span class="k">${i + 1}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
   function renderQ() {
     answered = false; cur = Q[qi]; renderSegs();
-    const it = cur, f = FLOORS[it.floor - 1], head = lab => `<div class="card-h"><span class="kind">${lab}</span><span class="eyebrow">${C.unit} ${f.n} · ${f.name}</span></div>`;
+    const it = cur, f = FLOORS[it.floor - 1], head = lab => it.u ? `<div class="card-h"><span class="kind">${esc(it.task)}</span><span class="eyebrow">Exercise ${it.u}.${it.exn} · ${lab}</span></div>`
+        : `<div class="card-h"><span class="kind">${lab}</span><span class="eyebrow">${C.unit} ${f.n} · ${f.name}</span></div>`;
     let html = "";
-    if (it.kind === "gap" && S.mode === "type") {
+    if (it.kind === "gap" && S.mode === "type" && nGaps(it.s) === 1) {
       html = head("Type the missing word") +
         `<p class="prompt rise">${esc(it.s).replace("___", `<span class="gap" id="gap"><input id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Missing word" size="${Math.max(4, it.a.length)}"></span>`)}</p>
         <div class="type-row"><button class="btn primary" id="btn-check">Check</button><button class="btn" id="btn-hint">Hint</button><span class="hint-txt" id="hint"></span></div>`;
     } else if (it.kind === "gap" || it.kind === "mc") {
       cur.opts = shuffle([it.a, ...it.d]); cur.right = it.a;
       const lab = it.kind === "gap" ? "Choose the missing word" : it.t === "q" ? "The interviewer asks · choose the strongest answer" : it.t === "u" ? "Say it like a leader" : it.t === "h" ? "Headline desk · choose the best headline" : it.t === "p" ? "Prompt lab · choose the best prompt" : it.t === "e" ? "Fix the mistake · choose the correct sentence" : "Multiple choice";
-      const pr = it.kind === "gap" ? esc(it.s).replace("___", `<span class="gap" id="gap">&nbsp;</span>`)
+      const pr = it.kind === "gap" ? (() => { let k = 0; return esc(it.s).replace(/___/g, () => `<span class="gap" ${k++ ? "" : 'id="gap"'}>&nbsp;</span>`); })()
         : it.t === "q" ? `<span class="q-line">“${esc(it.s)}”</span>${canSpeak ? `<button class="say-q" id="btn-sayq" aria-label="Hear the question"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H3v6h3l5 4zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>Hear it</button>` : ""}`
         : it.t === "u" ? `<span class="direct"><b>Too direct</b><s>${esc(it.s)}</s></span>How would a leader say it?`
         : it.t === "h" ? `<span class="story"><b>The story</b>${esc(it.s)}</span>Which headline would you run?`
@@ -204,7 +226,7 @@
         : esc(it.s);
       html = head(lab) + `<p class="prompt rise">${pr}</p>` + optsHtml(cur.opts);
     } else if (it.kind === "ru") {
-      cur.right = fullSentence(it); cur.opts = shuffle([it.a, ...it.d].map(w => it.s.replace("___", w)));
+      cur.right = fullSentence(it); cur.opts = shuffle([it.a, ...it.d].map(w => noHint(fill(it.s, w))));
       html = head("Translate · choose the right English") + `<p class="prompt rise ru-prompt">${esc(it.ru)}</p>` + optsHtml(cur.opts);
     } else { // order
       const w = words(it); let sh = shuffle(w); for (let k = 0; k < 5 && sh.join(" ") === w.join(" "); k++) sh = shuffle(w);
@@ -214,7 +236,7 @@
          <div class="type-row"><button class="btn primary" id="btn-check" disabled>Check</button><button class="btn" id="btn-undo">Undo</button><span class="hint-txt">Tap the words in order</span></div>`;
     }
     $("#card").innerHTML = html + `<div id="fb"></div>`;
-    if (it.kind === "gap" && S.mode === "type") {
+    if (it.kind === "gap" && S.mode === "type" && nGaps(it.s) === 1) {
       const inp = $("#ans"); setTimeout(() => inp.focus(), 30);
       let hints = 0;
       $("#btn-check").onclick = () => checkTyped();
@@ -258,7 +280,7 @@
     const pick = cur.opts[i], ok = pick === cur.right;
     document.querySelectorAll(".opt").forEach(b => { const o = cur.opts[+b.dataset.i]; b.disabled = true;
       if (o === cur.right) b.classList.add("ok"); else if (+b.dataset.i === i) b.classList.add("bad"); });
-    if (cur.kind === "gap") { const g = $("#gap"); g.textContent = cur.a; g.classList.add(ok ? "ok" : "bad"); }
+    if (cur.kind === "gap") { const p = parts(cur.a); document.querySelectorAll("#card .prompt .gap").forEach((g, k) => { g.textContent = p[Math.min(k, p.length - 1)]; g.classList.add(ok ? "ok" : "bad"); }); }
     if (!ok) document.querySelector(`.opt[data-i="${i}"]`).classList.add("shake");
     finish(ok);
   }
@@ -267,7 +289,7 @@
     const p = S.prog[cur.id] || { c: 0, w: 0 }; ok ? p.c++ : p.w++; p.last = ok ? 1 : 0; S.prog[cur.id] = p;
     const today = new Date().toISOString().slice(0, 10); if (!S.days.includes(today)) S.days.push(today); S.days = S.days.slice(-60);
     save(); renderSegs();
-    const full = cur.t === "g" ? esc(cur.s).replace("___", `<mark>${esc(cur.a)}</mark>`) : `<mark>${esc(cur.a)}</mark>`;
+    const full = cur.t === "g" ? fillEsc(noHint(cur.s), cur.a, x => `<mark>${x}</mark>`) : `<mark>${esc(cur.a)}</mark>`;
     const praise = ["Correct", "Well done", "Exactly right", "Spot on", "Perfect"][Math.floor(Math.random() * 5)];
     $("#fb").innerHTML = `<div class="fb ${ok ? "ok" : "bad"} rise" role="status">
         <span class="verdict">${ok ? "✓ " + praise : "quhpe".includes(cur.t) ? "✕ Not quite — here is the " + ({ h: "strongest headline", p: "strongest prompt", e: "correct sentence" }[cur.t] || "strongest answer") : (cur.kind === "order" || cur.kind === "ru") ? "✕ Not quite — here is the right sentence" : "✕ Not quite — the answer is “" + esc(cur.a) + "”"}</span>
@@ -289,12 +311,14 @@
     const ok = res.filter(Boolean).length, n = res.length, pct = ok / n;
     const title = pct === 1 ? "Flawless. Doors open." : pct >= 0.8 ? "Strong performance." : pct >= 0.5 ? "Good progress." : "Keep climbing.";
     const misses = Q.filter((_, i) => !res[i]);
+    const weak = guide ? [...new Set(misses.map(it => it.u))].sort((a, b) => a - b) : [];
     $("#res").innerHTML = `
+      ${guide ? `<div class="g-guide"><span class="eyebrow">Study guide</span>${weak.length ? `<p>Изучите эти юниты — в них были ошибки:</p><div class="g-guide-units">${weak.map(n => `<button class="btn" data-gunit="${n}">Unit ${n} · ${window.GRAMMAR.md(window.GRAMMAR.unit(n).title)}</button>`).join("")}</div>` : `<p>Все ответы верные — переходите к следующему разделу.</p>`}</div>` : ""}
       <span class="eyebrow">${esc(label)}</span>
       <div class="score">${ok}<small> / ${n}</small></div>
       <h2>${title}</h2>
       <p class="muted" style="margin:0;max-width:46ch">${misses.length ? "These sentences go to your review list. Fix them to master the floor." : "Every answer was right. Try the next session or move up a floor."}</p>
-      ${misses.length ? `<div class="miss">${misses.map(it => `<div>${it.t === "g" ? esc(it.s).replace("___", `<b>${esc(it.a)}</b>`) : esc(it.s) + " → <b>" + esc(it.a) + "</b>"}</div>`).join("")}</div>` : ""}
+      ${misses.length ? `<div class="miss">${misses.map(it => `<div>${it.t === "g" ? fillEsc(it.s, it.a, x => `<b>${x}</b>`) : esc(it.s) + " → <b>" + esc(it.a) + "</b>"}</div>`).join("")}</div>` : ""}
       <div class="res-actions">
         <button class="btn primary" id="btn-again">Next session →</button>
         ${misses.length ? `<button class="btn" id="btn-fix">Fix these ${misses.length}</button>` : ""}
@@ -302,18 +326,43 @@
       </div>`;
     show("results");
     $("#btn-home").onclick = home;
+    document.querySelectorAll("[data-gunit]").forEach(b => b.onclick = () => openRule(+b.dataset.gunit));
     $("#btn-again").onclick = () => again();
     if (misses.length) $("#btn-fix").onclick = () => start(shuffle(misses), "Fixing mistakes");
     $("#btn-again").focus({ preventScroll: true });
   }
   let again = () => home();
-  function home() { renderHome(); show("home"); }
+  let backTo = null; // where "exit" goes from practice: the rule page of the unit we came from
+  function unitProg(u) { const it = byUnit(u), m = it.filter(mastered).length; return { m, t: it.length, pct: it.length ? Math.round(m / it.length * 100) : 0 }; }
+  function openSection(n) {
+    const f = FLOORS[n - 1];
+    $("#section-body").innerHTML = window.GRAMMAR.renderSection(f, { unitLabel: C.unit, unitProg });
+    $("#section-body").querySelectorAll("[data-unit]").forEach(b => b.onclick = () => openRule(+b.dataset.unit));
+    $("#g-sec-mix").onclick = () => { backTo = () => openSection(n); again = () => start(buildPartMix(n), "Additional exercises · " + f.name); again(); };
+    $("#g-sec-back").onclick = home;
+    show("section");
+  }
+  function openRule(n) {
+    const u = window.GRAMMAR.unit(n), f = FLOORS[u.floor - 1], all = window.GRAMMAR.units.map(x => x.n).sort((a, b) => a - b), nx = all[all.indexOf(n) + 1];
+    $("#rule-body").innerHTML = window.GRAMMAR.renderRule(u, { floorName: f.name, canSpeak, next: nx ? window.GRAMMAR.unit(nx) : null,
+      done: (un, k) => ITEMS.filter(it => it.u === un && it.exn === k && mastered(it)).length });
+    const b = $("#rule-body");
+    b.querySelectorAll("[data-say]").forEach(x => x.onclick = () => speak(x.dataset.say));
+    b.querySelectorAll("[data-ex]").forEach(x => x.onclick = () => { const k = +x.dataset.ex; backTo = () => openRule(n); again = () => start(buildExercise(n, k), "Exercise " + n + "." + k); again(); });
+    $("#g-practice").onclick = () => { backTo = () => openRule(n); again = () => start(buildUnit(n), "Unit " + n + " · practice"); again(); };
+    if (nx) $("#g-next").onclick = () => openRule(nx);
+    $("#g-back").onclick = () => openSection(u.floor);
+    show("rule");
+  }
+  function home() { if (backTo && C.units) { const b = backTo; backTo = null; return b(); } renderHome(); show("home"); }
 
   // ---------- wiring ----------
   $("#floors").addEventListener("click", e => { const b = e.target.closest(".floor"); if (!b) return; const n = +b.dataset.floor;
+    if (C.units) return openSection(n);
     again = () => start(buildFloor(n), C.unit + " " + n + " · " + FLOORS[n - 1].name); again(); });
   $("#btn-mix").onclick = () => { again = () => start(buildMix(), "Mixed interview"); again(); };
-  $("#btn-special").onclick = () => { again = C.special.kind === "mock" ? () => start(buildMock(), "Mock interview", true) : () => start(buildType({ headline: "h", prompt: "p", fix: "e" }[C.special.kind] || "u"), C.special.title); again(); };
+  $("#btn-special").onclick = () => { if (C.special.kind === "guide") { backTo = null; again = () => start(buildGuide(), "Study guide test", false, true); return again(); }
+    again = C.special.kind === "mock" ? () => start(buildMock(), "Mock interview", true) : () => start(buildType({ headline: "h", prompt: "p", fix: "e" }[C.special.kind] || "u"), C.special.title); again(); };
   $("#btn-review").onclick = () => { again = () => { const l = buildReview(); l.length ? start(l, "Review mistakes") : home(); }; again(); };
   $("#btn-exit").onclick = home;
   for (const [id, key] of [["#set-act", "act"], ["#set-order", "order"], ["#set-mode", "mode"], ["#set-len", "len"], ["#set-ru", "ru"]])

@@ -344,3 +344,120 @@ window.COURSES = {
  }
 };
 window.BANKS = { interview: [], business: [], journalism: [], tech: [], itstudent: [] };
+window.COURSES.grammar = {
+ "key": "corner-office-grammar-v1",
+ "unit": "Part",
+ "units": true,
+ "special": {
+  "kind": "guide",
+  "title": "Study guide test",
+  "sub": "One question per unit — shows which units to study",
+  "icon": "<path d=\"M9 11l2 2 4-4M5 4h14v16H5zM8 4v16\"/>"
+ },
+ "floors": [
+  {
+   "n": 1,
+   "name": "Present tenses",
+   "short": "Present",
+   "cefr": "A1–A2",
+   "desc": "am/is/are, Present Continuous, Present Simple, have got"
+  },
+  {
+   "n": 2,
+   "name": "Past tenses",
+   "short": "Past",
+   "cefr": "A2",
+   "desc": "was/were, Past Simple, Past Continuous, used to"
+  },
+  {
+   "n": 3,
+   "name": "Present Perfect",
+   "short": "Perfect",
+   "cefr": "A2–B1",
+   "desc": "have done, just/yet, ever, for/since, Past Perfect"
+  },
+  {
+   "n": 4,
+   "name": "The future",
+   "short": "Future",
+   "cefr": "A2–B1",
+   "desc": "going to, will, present for future, time clauses"
+  },
+  {
+   "n": 5,
+   "name": "Modal verbs",
+   "short": "Modals",
+   "cefr": "A2–B2",
+   "desc": "can, must, have to, should, might, deduction"
+  },
+  {
+   "n": 6,
+   "name": "Questions & short answers",
+   "short": "Questions",
+   "cefr": "A2–B1",
+   "desc": "word order, subject questions, tags, indirect questions"
+  },
+  {
+   "n": 7,
+   "name": "The passive",
+   "short": "Passive",
+   "cefr": "B1–B2",
+   "desc": "is done, was done, has been done, have something done"
+  },
+  {
+   "n": 8,
+   "name": "Reported speech",
+   "short": "Reported",
+   "cefr": "B1",
+   "desc": "said that, asked if, told me to"
+  },
+  {
+   "n": 9,
+   "name": "Conditionals & wishes",
+   "short": "If",
+   "cefr": "A2–B2",
+   "desc": "if, unless, wish, third and mixed conditionals"
+  },
+  {
+   "n": 10,
+   "name": "Verb patterns",
+   "short": "Verb + -ing / to",
+   "cefr": "B1",
+   "desc": "enjoy doing, want to do, tell sb to, make/let"
+  },
+  {
+   "n": 11,
+   "name": "Nouns, articles, determiners",
+   "short": "Articles",
+   "cefr": "A1–B1",
+   "desc": "a/an/the, some/any, much/many, possessives"
+  },
+  {
+   "n": 12,
+   "name": "Adjectives & adverbs",
+   "short": "Adjectives",
+   "cefr": "A2–B1",
+   "desc": "comparatives, superlatives, too/enough, word order"
+  },
+  {
+   "n": 13,
+   "name": "Clauses & linking words",
+   "short": "Clauses",
+   "cefr": "B1–B2",
+   "desc": "who/which/that, although, despite, so that"
+  },
+  {
+   "n": 14,
+   "name": "Prepositions & phrasal verbs",
+   "short": "Prepositions",
+   "cefr": "A2–B1",
+   "desc": "at/on/in, verb + preposition, phrasal verbs"
+  }
+ ],
+ "name": "Grammar, Unit by Unit",
+ "mark": "G",
+ "level": "A1 → B2 · 14 parts",
+ "eyebrow": "English grammar · rule + practice in every unit",
+ "h1": "Every rule, <em>unit</em> by <em>unit</em>.",
+ "lead": "Each unit is a spread: the rule with examples and tables on one side, numbered exercises on the other. Start with the study guide test."
+};

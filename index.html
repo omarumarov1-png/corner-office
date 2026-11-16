@@ -54,6 +54,52 @@ body::after{content:""; position:fixed; inset:0; pointer-events:none; opacity:.5
   background:repeating-linear-gradient(90deg, transparent 0 119px, var(--line-soft) 119px 120px);}
 .wrap{max-width:760px; margin:0 auto; position:relative; z-index:1; display:flex; flex-direction:column; gap:22px;}
 button{font:inherit; color:inherit; cursor:pointer}
+
+[data-course="grammar"]{--bg:#0C1220; --bg-glow:#1B2742; --panel:#121A2C; --panel-2:#172137; --line:rgba(226,86,86,.26); --ink:#EEEAE2; --muted:#A6ADC0; --brass:#E25656; --brass-hi:#F79B9B; --brass-ink:#1E0909; --brass-deep:#9B2B2B; --tint:rgba(226,86,86,.13);}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"])[data-course="grammar"], :root:not([data-theme="dark"]) [data-course="grammar"]{--bg:#EEF0F5; --bg-glow:#DDE3EF; --panel:#FBFBFD; --panel-2:#F2F4F9; --line:rgba(176,38,38,.28); --ink:#121A2C; --muted:#586077; --brass:#B42828; --brass-hi:#8E1B1B; --brass-ink:#FFF5F5;} }
+:root[data-theme="light"][data-course="grammar"], :root[data-theme="light"] [data-course="grammar"]{--bg:#EEF0F5; --bg-glow:#DDE3EF; --panel:#FBFBFD; --panel-2:#F2F4F9; --line:rgba(176,38,38,.28); --ink:#121A2C; --muted:#586077; --brass:#B42828; --brass-hi:#8E1B1B; --brass-ink:#FFF5F5;}
+/* grammar: section list, rule spread, exercises, study guide */
+.g-card{display:flex; flex-direction:column; gap:22px; min-width:0}
+.g-card .res-actions{display:flex; flex-wrap:wrap; gap:10px}
+.g-card .btn{max-width:100%; white-space:normal; text-align:left; line-height:1.3}
+.g-card .g-ex li span, .g-mis li, .g-sec p{min-width:0; overflow-wrap:anywhere}
+@media (max-width:480px){ .g-card{padding:22px 16px 20px} .g-head h2{font-size:25px} .g-ex li{font-size:16px} }
+.g-head h2{font-family:var(--display); font-weight:500; font-size:30px; line-height:1.15; margin:6px 0 4px}
+.g-head .muted{margin:0}
+.g-units{display:flex; flex-direction:column; gap:8px}
+.g-unit{display:grid; grid-template-columns:46px minmax(0,1fr) auto; gap:14px; align-items:center; text-align:left; border:1px solid var(--line); border-radius:14px; padding:12px 14px; background:var(--panel-2); color:var(--ink)}
+.g-unit:hover{border-color:var(--brass)}
+.g-un{font-family:var(--display); font-size:22px; color:var(--brass-hi); text-align:center}
+.g-ut{min-width:0; display:flex; flex-direction:column; gap:6px} .g-ut b{font-weight:600; font-size:16px}
+.g-uc{font-family:var(--mono); font-size:12px; color:var(--muted)}
+.g-sec{display:flex; flex-direction:column; gap:10px; padding-top:18px; border-top:1px solid var(--line)}
+.g-sec-h{display:flex; gap:12px; align-items:baseline}
+.g-k{flex:none; width:30px; height:30px; border-radius:8px; display:grid; place-items:center; background:var(--brass); color:var(--brass-ink); font-family:var(--mono); font-weight:700; font-size:14px}
+.g-sec h3{margin:0; font-family:var(--display); font-weight:500; font-size:20px; line-height:1.25}
+.g-sec p{margin:0; line-height:1.6; color:var(--ink)}
+.g-sec p i, .g-ex i{color:var(--brass-hi); font-style:italic}
+.g-sec .form, .g-ex .form, .g-table .form{font-family:var(--mono); font-size:.92em; color:var(--brass-hi); background:var(--tint); padding:1px 6px; border-radius:6px; white-space:nowrap}
+.g-note{border-left:3px solid var(--brass); padding:4px 0 4px 12px; color:var(--muted)!important; font-size:14.5px}
+.g-table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px}
+.g-table{border-collapse:collapse; width:100%; font-size:15px}
+.g-table th{font-family:var(--mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--brass); text-align:left; padding:10px 12px; background:var(--tint)}
+.g-table td{padding:9px 12px; border-top:1px solid var(--line); vertical-align:top}
+.g-table b{color:var(--brass-hi)}
+.g-ex{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px}
+.g-ex li{display:flex; justify-content:space-between; gap:12px; align-items:center; padding:9px 12px; border-radius:10px; background:var(--panel-2); font-family:var(--display); font-size:17px; line-height:1.4}
+.g-ex li b{color:var(--brass-hi); font-weight:600}
+.g-say{flex:none; width:30px; height:30px; border-radius:50%; border:1px solid var(--line); background:transparent; color:var(--brass); font-size:11px}
+.g-mis ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px}
+.g-mis li{display:grid; gap:2px; padding:10px 12px; border-radius:10px; background:var(--panel-2)}
+.g-mis s{color:var(--muted)} .g-mis li b{color:var(--brass-hi); font-weight:600} .g-mis li span{font-size:14px; color:var(--muted)}
+.g-exlist{display:flex; flex-direction:column; gap:8px; padding-top:18px; border-top:1px solid var(--line)}
+.g-exbtn{display:grid; grid-template-columns:52px minmax(0,1fr) auto; gap:12px; align-items:center; text-align:left; border:1px solid var(--line); border-radius:12px; padding:11px 14px; background:var(--panel-2); color:var(--ink)}
+.g-exbtn:hover{border-color:var(--brass)}
+.g-exn{font-family:var(--mono); color:var(--brass-hi); font-weight:700}
+.g-exc{font-family:var(--mono); font-size:12px; color:var(--muted)}
+.g-guide{display:flex; flex-direction:column; gap:10px; padding:16px; border:1px solid var(--brass); border-radius:14px; background:var(--tint); margin-bottom:16px}
+.g-guide p{margin:0}
+.g-guide-units{display:flex; flex-wrap:wrap; gap:8px}
 button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); outline-offset:3px}
 .eyebrow{font-family:var(--mono); font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--brass)}
 .muted{color:var(--muted)}
@@ -277,7 +323,7 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
       <div class="set set-wide"><span class="eyebrow">Activity</span><div class="seg" id="set-act"><button data-v="mix">Mix</button><button data-v="gap">Missing word</button><button data-v="mc">Choice</button><button data-v="order">Word order</button><button data-v="ru">Translate</button></div></div>
       <div class="set"><span class="eyebrow">Word order</span><div class="seg" id="set-order"><button data-v="on">On</button><button data-v="off">Off</button></div></div>
       <div class="set"><span class="eyebrow">Missing word</span><div class="seg" id="set-mode"><button data-v="choose">Choose</button><button data-v="type">Type it</button></div></div>
-      <div class="set"><span class="eyebrow">Session</span><div class="seg" id="set-len"><button data-v="10">10</button><button data-v="20">20</button></div></div>
+      <div class="set"><span class="eyebrow">Session</span><div class="seg" id="set-len"><button data-v="10">10</button><button data-v="20">20</button><button data-v="30">30</button></div></div>
       <div class="set"><span class="eyebrow">Russian</span><div class="seg" id="set-ru"><button data-v="on">Show</button><button data-v="off">Hide</button></div></div>
     </div>
     <div class="reset-row">
@@ -287,6 +333,10 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
     </div>
     <p class="foot">Keys: <span class="kbd">1–4</span> choose · <span class="kbd">Enter</span> check / next · <span class="kbd">Backspace</span> undo a word · <span class="kbd">Esc</span> back to the menu. Progress is saved in this browser.</p>
   </section>
+
+  <!-- GRAMMAR: part (section) and unit (rule page) -->
+  <section id="section" hidden class="wrap" style="gap:16px"><div class="card g-card" id="section-body"></div></section>
+  <section id="rule" hidden class="wrap" style="gap:16px"><article class="card g-card" id="rule-body"></article></section>
 
   <!-- PRACTICE -->
   <section id="practice" hidden class="wrap" style="gap:16px">
@@ -305,6 +355,8 @@ button:focus-visible, input:focus-visible{outline:2px solid var(--brass-hi); out
 </div>
 
 <script src="courses.js"></script>
+<script src="grammar.js"></script>
+<script src="gr01.js"></script>
 <script src="i1.js"></script>
 <script src="i2.js"></script>
 <script src="i3.js"></script>
