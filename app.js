@@ -13,6 +13,10 @@
     }));
     return out;
   };
+  // Grammar additional exercises live outside ITEMS (no unit number), so totals, the study guide and unit progress stay unit-based.
+  const extrasOf = () => !(C.units && window.GRAMMAR && window.GRAMMAR.extraList) ? [] : window.GRAMMAR.extraList().flatMap(x => x.items.map((r, i) => ({
+    id: "x" + x.xn + "-" + (i + 1), floor: x.floor, idx: i, xn: x.xn, xunits: x.units, task: x.task, t: r[0], s: r[1], a: r[2], d: r[3], ru: r[4], x: r[5] })));
+  let EXTRA = [];
   const byFloor = n => ITEMS.filter(it => it.floor === n);
 
   // ---------- storage (safe) ----------
@@ -91,7 +95,7 @@
         <span class="right">${f.n === nf ? '<span class="tag-next">Next</span>' : ""}<span class="cefr">${f.cefr}</span><span>${m}/${items.length}</span></span>
       </button>`;
     }).join("");
-    const nMiss = ITEMS.filter(missed).length;
+    const nMiss = ITEMS.concat(EXTRA).filter(missed).length;
     $("#review-sub").textContent = nMiss ? nMiss + " sentence" + (nMiss > 1 ? "s" : "") + " to fix" : "Nothing to review yet";
     $("#btn-review").disabled = !nMiss;
     for (const [id, key] of [["#set-act", "act"], ["#set-order", "order"], ["#set-mode", "mode"], ["#set-len", "len"], ["#set-ru", "ru"]])
@@ -150,7 +154,7 @@
   }
   let guide = false;
   const buildType = t => shuffle(ITEMS.filter(it => it.t === t)).slice(0, +S.len).map(it => Object.assign({}, it, { kind: "mc" }));
-  const buildReview = () => assign(shuffle(ITEMS.filter(it => missed(it) && fits(it))).slice(0, +S.len));
+  const buildReview = () => assign(shuffle(ITEMS.concat(EXTRA).filter(it => missed(it) && fits(it))).slice(0, +S.len));
 
   // ---------- practice ----------
   let Q = [], qi = 0, res = [], label = "", answered = false, cur = null, mock = false;
@@ -159,7 +163,7 @@
 
   // ---------- courses ----------
   function boot(id) {
-    C = COURSES[id]; ITEMS = itemsOf(id); KEY = C.key;
+    C = COURSES[id]; ITEMS = itemsOf(id); EXTRA = extrasOf(); KEY = C.key;
     // A course that grows part by part (grammar) shows only the parts that already have units; parts are written in order.
     FLOORS = C.units ? C.floors.filter(f => ITEMS.some(it => it.floor === f.n)) : C.floors; NF = FLOORS.length;
     S = Object.assign({ prog: {}, mode: "choose", len: 10, ru: "on", act: "mix", order: "on", days: [] }, load());
@@ -209,7 +213,8 @@
   const optsHtml = opts => `<div class="opts ${opts.some(o => o.length > 34) ? "long" : ""}">${opts.map((o, i) => `<button class="opt" data-i="${i}"><span class="k">${i + 1}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
   function renderQ() {
     answered = false; cur = Q[qi]; renderSegs();
-    const it = cur, f = FLOORS[it.floor - 1], head = lab => it.u ? `<div class="card-h"><span class="kind">${esc(it.task)}</span><span class="eyebrow">Exercise ${it.u}.${it.exn} · ${lab}</span></div>`
+    const it = cur, f = FLOORS[it.floor - 1], head = lab => it.xn ? `<div class="card-h"><span class="kind">${esc(it.task.replace(/\*\*/g, ""))}</span><span class="eyebrow">Additional exercise ${it.xn} · Units ${it.xunits.join(", ")} · ${lab}</span></div>`
+        : it.u ? `<div class="card-h"><span class="kind">${esc(it.task)}</span><span class="eyebrow">Exercise ${it.u}.${it.exn} · ${lab}</span></div>`
         : `<div class="card-h"><span class="kind">${lab}</span><span class="eyebrow">${C.unit} ${f.n} · ${f.name}</span></div>`;
     let html = "";
     if (it.kind === "gap" && S.mode === "type" && nGaps(it.s) === 1) {
@@ -338,8 +343,9 @@
   function unitProg(u) { const it = byUnit(u), m = it.filter(mastered).length; return { m, t: it.length, pct: it.length ? Math.round(m / it.length * 100) : 0 }; }
   function openSection(n) {
     const f = FLOORS[n - 1];
-    $("#section-body").innerHTML = window.GRAMMAR.renderSection(f, { unitLabel: C.unit, unitProg });
+    $("#section-body").innerHTML = window.GRAMMAR.renderSection(f, { unitLabel: C.unit, unitProg, xdone: k => EXTRA.filter(it => it.xn === k && mastered(it)).length });
     $("#section-body").querySelectorAll("[data-unit]").forEach(b => b.onclick = () => openRule(+b.dataset.unit));
+    $("#section-body").querySelectorAll("[data-xn]").forEach(b => b.onclick = () => { const k = +b.dataset.xn; backTo = () => openSection(n); again = () => start(assign(EXTRA.filter(it => it.xn === k)), "Additional exercise " + k); again(); });
     $("#g-sec-mix").onclick = () => { backTo = () => openSection(n); again = () => start(buildPartMix(n), "Additional exercises · " + f.name); again(); };
     $("#g-sec-back").onclick = home;
     show("section");

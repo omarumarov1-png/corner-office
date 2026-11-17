@@ -20,6 +20,12 @@
   // more(n, [exercises]) appends further numbered exercises to unit n (files gr01b.js… load after gr01.js…).
   G.more = (n, exs) => { const u = G.unit(n); if (!u) throw new Error("more(): no unit " + n); u.ex.push(...exs); };
   G.unitsOf = floor => G.units.filter(u => u.floor === floor).sort((a, b) => a.n - b.n);
+  // Additional exercises: written review exercises that mix several units of one part (like the appendix of a grammar book).
+  // G.addExtra(floor, [{ task, units: [n…], items: [rows] }]) — numbered 1, 2, 3… across the whole book in part order.
+  G.extra = G.extra || [];
+  G.addExtra = (floor, exs) => exs.forEach(e => G.extra.push(Object.assign({ floor }, e)));
+  G.extraList = () => G.extra.map((e, i) => ({ e, i })).sort((x, y) => x.e.floor - y.e.floor || x.i - y.i).map((x, k) => Object.assign({}, x.e, { xn: k + 1 }));
+  G.extraOf = floor => G.extraList().filter(x => x.floor === floor);
 
   // ---------- rule page (left page of the spread) ----------
   G.renderRule = function (u, ctx) {
@@ -48,7 +54,8 @@
       <div class="g-head"><span class="eyebrow">${esc(ctx.unitLabel)} ${f.n} · ${esc(f.cefr)}</span><h2>${esc(f.name)}</h2><p class="muted">${esc(f.desc)}</p></div>
       <div class="g-units">${G.unitsOf(f.n).map(u => { const p = ctx.unitProg(u.n); return `
         <button class="g-unit" data-unit="${u.n}"><span class="g-un">${u.n}</span><span class="g-ut"><b>${md(u.title)}</b><span class="bar"><i style="width:${p.pct}%"></i></span></span><span class="g-uc">${p.m}/${p.t}</span></button>`; }).join("")}</div>
-      <div class="res-actions"><button class="btn primary" id="g-sec-mix">Additional exercises · mixed ${esc(f.short || f.name)} →</button><button class="btn" id="g-sec-back">Back to the menu</button></div>`;
+      ${G.extraOf(f.n).length ? `<div class="g-exlist"><span class="eyebrow">Additional exercises</span>${G.extraOf(f.n).map(x => `<button class="g-exbtn" data-xn="${x.xn}"><span class="g-exn">${x.xn}</span><span>${md(x.task)}<span class="g-exu">Units ${x.units.join(", ")}</span></span><span class="g-exc">${ctx.xdone(x.xn)}/${x.items.length}</span></button>`).join("")}</div>` : ""}
+      <div class="res-actions"><button class="btn primary" id="g-sec-mix">Mixed review · ${esc(f.short || f.name)} →</button><button class="btn" id="g-sec-back">Back to the menu</button></div>`;
   };
   G.md = md;
 })();
